@@ -5,11 +5,11 @@ const errorReport = require('../lib/errorReporting');
 
 class IndTownHall {
   constructor(cur) {
-    var address,
+    let address,
       zip,
       city;
     if (cur.address) {
-      var addList = cur.address.split(', ');
+      let addList = cur.address.split(', ');
       if (addList[addList.length - 1] === 'United States') {
         addList.splice(addList.length - 1);
       }
@@ -19,7 +19,8 @@ class IndTownHall {
       address = addList.join(', ');
     }
     this.event_title;
-    var prefix;
+    let prefix;
+
     if (cur.District === 'Senate') {
       prefix = 'Sen.';
     } else {
@@ -32,6 +33,7 @@ class IndTownHall {
     } else {
       this.event_title = prefix + ' ' + cur.Member + ' (' + cur.District + ') ' + cur.meetingType;
     }
+
     this.event_starts_at_date = moment(cur.dateObj).format('L');
     this.event_starts_at_time = cur.Time.split(' ')[0];
     this.event_starts_at_ampm = cur.Time.split(' ')[1].toLowerCase();
@@ -46,6 +48,7 @@ class IndTownHall {
     this.event_public_description = cur.eventName ? cur.eventName : cur.Notes;
     this.event_public_description = this.event_public_description ? this.event_public_description: this.event_title;
     this.action_meeting_type = cur.meetingType;
+
     if (cur.link) {
       this.action_link_to_event_information = cur.link;
     } else {
