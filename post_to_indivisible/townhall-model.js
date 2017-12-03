@@ -1,7 +1,8 @@
 const moment = require('moment');
-const firebasedb = require('../lib/setupFirebase');
 const request = require('request');
-const errorReport = require('../lib/errorReporting');
+
+const firebasedb = require('../lib/setup-firebase');
+const errorReport = require('../lib/error-reporting');
 
 class IndTownHall {
   constructor(cur) {

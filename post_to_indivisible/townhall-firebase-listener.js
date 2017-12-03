@@ -1,6 +1,7 @@
-const firebasedb = require('../lib/setupFirebase');
-const IndTownHall = require('./townHallModel');
 const moment = require('moment');
+
+const firebasedb = require('../lib/setup-firebase');
+const IndTownHall = require('./townhall-model');
 
 function prepTownHall(townhall) {
   if ((!townhall.repeatingEvent) && (townhall.meetingType !== 'Tele-Town Hall') && (moment(townhall.dateObj).isAfter()) && (townhall.meetingType !=='Tele-town Hall')) {

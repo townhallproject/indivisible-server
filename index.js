@@ -3,8 +3,8 @@ const server = require('./lib/server.js');
 const express = require('express');
 const PORT = process.env.PORT || 3000;
 const app = express();
-const database = require('./postToInd/townHallListener');
 
+const database = require('./post_to_indivisible/townhall-firebase-listener');
 
 app.get('*', function(request, response) {
   console.log('New request:', request.url);
