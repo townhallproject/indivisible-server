@@ -24,11 +24,11 @@ class IndEvent {
 
   checkDateAndRemove() {
     if (!moment(this.starts_at_utc).isAfter()) {
-      console.log('removing', moment(this.starts_at_utc).format('dd MM, YYYY'));
+      console.log('removing', moment(this.starts_at_utc).format('MM/DD/YYYY'));
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       return ref.remove();
     }
-    console.log('in future', moment(this.starts_at_utc).format('dd MM, YYYY'));
+    console.log('in future', moment(this.starts_at_utc).format('MM/DD/YYYY'));
   }
 }
 
