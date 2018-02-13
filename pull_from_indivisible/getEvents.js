@@ -24,7 +24,7 @@ function getAllData(path){
         console.log('next', res.next);
         return getAllData(res.next);
       }
-      console.log('got all');
+      return console.log('got all');
     })
     .catch(console.log);
 }
