@@ -21,11 +21,13 @@ class IndTownHall {
     }
     this.event_title;
     let prefix;
-
-    if (cur.District === 'Senate') {
-      prefix = 'Sen.';
-    } else {
+    if (cur.flagIcon === 'campaign'){
+      prefix = '';
+    }
+    else if (cur.district && !cur.thp_id) {
       prefix = 'Rep.';
+    } else {
+      prefix = 'Sen.';
     }
     if (cur.iconFlag === 'staff') {
       this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + cur.District + ')';
@@ -38,7 +40,7 @@ class IndTownHall {
     this.event_starts_at_date = moment(cur.dateObj).format('L');
     this.event_starts_at_time = cur.Time.split(' ')[0];
     this.event_starts_at_ampm = cur.Time.split(' ')[1].toLowerCase();
-    this.event_venue = cur.Location ? cur.Location: ' ';
+    this.event_venue = this.getVenue(cur);
     this.event_address1 = address;
     this.event_host_ground_rules = '1';
     this.event_host_requirements = '1';
@@ -59,6 +61,20 @@ class IndTownHall {
     this.campaign = '/rest/v1/campaign/9/';
   }
 
+  displayDistrict(cur){
+    if (cur.district) {
+      return `${cur.state}-${cur.district}`;
+    }
+    return 'Senate';
+  }
+
+  getVenue(cur){
+    if (cur.Location) {
+      return cur.Location;
+    }
+    return 'Address below:';
+  }
+
   submitEvent(eventID) {
     let townHall = this;
     const user = process.env.ACTION_KIT_USERNAME;
@@ -76,11 +92,13 @@ class IndTownHall {
       },
       function (error, response, body) {
         if (error || response.statusCode >= 400) {
+          console.log('er', response.body, eventID);
           let newerrorEmail = new errorReport(response.body, `Issue with posting to indivisible: ${eventID}`);
           return newerrorEmail.sendEmail();
         }
         if (!error && response.statusCode == 201) {
           let path = body['event'].toString();
+          console.log(path);
           firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
           firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
         }
