@@ -8,6 +8,14 @@ class IndEvent {
         this[key] = response[key];
       }
     }
+    const eventType = response.fields.filter(obj => obj.name === 'event_type');
+    const groupName = response.fields.filter(obj => obj.name === 'group_name');
+    if (eventType.length > 0) {
+      this.eventType = eventType[0].value;
+    }
+    if (groupName.length > 0) {
+      this.groupName = groupName[0].value;
+    }
   }
 
   writeToFirebase(mockref) {
