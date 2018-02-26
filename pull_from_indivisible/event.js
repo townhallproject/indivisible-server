@@ -1,5 +1,6 @@
-const firebasedb = require('../lib/setup-firebase');
 const moment = require('moment');
+const lodash = require('lodash');
+const firebasedb = require('../lib/setup-firebase');
 
 class IndEvent {
   constructor(response) {
@@ -9,12 +10,17 @@ class IndEvent {
       }
     }
     const eventType = response.fields.filter(obj => obj.name === 'event_type');
-    const groupName = response.fields.filter(obj => obj.name === 'group_name');
+    const issueFocus = response.fields.filter(obj => obj.name === 'event_issue_focus');
+    const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
     if (eventType.length > 0) {
       this.eventType = eventType[0].value;
     }
-    if (groupName.length > 0) {
-      this.groupName = groupName[0].value;
+    if (issueFocus.length > 0) {
+      this.issueFocus = issueFocus[0].value;
+    } else if (townHall.length > 0) {
+      this.issueFocus = 'Town Hall';
+    } else {
+      this.issueFocus = false;
     }
   }
 
@@ -32,11 +38,9 @@ class IndEvent {
 
   checkDateAndRemove() {
     if (!moment(this.starts_at_utc).isAfter()) {
-      console.log('removing', moment(this.starts_at_utc).format('MM/DD/YYYY'));
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       return ref.remove();
     }
-    console.log('in future', moment(this.starts_at_utc).format('MM/DD/YYYY'));
   }
 }
 

@@ -34,8 +34,7 @@ function getAllData(pageNumber){
       return pageNumber;
     })
     .then((pageNumber)=> {
-      if (pageNumber < 60) {
-        console.log(pageNumber++);
+      if (pageNumber < 400) {
         return getAllData(pageNumber++);
       }
     });
