@@ -5,6 +5,8 @@ const url = 'https://api.prosperworks.com';
 const path = '/developer_api/v1/companies/search';
 // const path = '/developer_api/v1/custom_field_definitions';
 const Group = require('./group');
+const makeGeoJSON = require('./point');
+const uploadToS3 = require('./mapboxUpload');
 
 function requestData(url, pageNumber) {
   return superagent
@@ -19,24 +21,37 @@ function requestData(url, pageNumber) {
       'sort_direction': 'desc'});
 }
 
+const allGroups = [];
 
 function getAllData(pageNumber){
   return requestData(url + path, pageNumber)
     .then((response) => {
+      console.log('got response');
       response.body.forEach((ele) => {
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
-        if (localGroupSubtype.value !== 140251) {
-          return;
+        if (localGroupSubtype.value === 140251) {
+          let newGroup = new Group(ele);
+          newGroup.writeToFirebase();
+          newGroup.getLatLng();
+          allGroups.push(newGroup);
         }
-        let newGroup = new Group(ele);
-        newGroup.writeToFirebase();
       });
       return pageNumber;
     })
     .then((pageNumber)=> {
-      if (pageNumber < 400) {
+      console.log('return page number', pageNumber);
+      if (pageNumber < 42) {
+        console.log(pageNumber++);
         return getAllData(pageNumber++);
       }
+      else {
+        console.log('got all of them');
+        const geoJSON = makeGeoJSON(allGroups);
+        uploadToS3(geoJSON);
+      }
+    })
+    .catch(e => {
+      console.log(e);
     });
 }
 

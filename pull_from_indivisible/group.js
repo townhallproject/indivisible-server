@@ -1,6 +1,6 @@
 const lodash = require('lodash');
 const superagent = require('superagent');
-const firebasedb = require('../lib/setup-firebase');
+const firebasedb = require('../lib/setup-indivisible-firebase');
 /*
 if custom field id 109116 (Local Group Subtype)
 has a value of 140251, display on map
@@ -24,27 +24,40 @@ class Group {
     this.tags = res.tags;
   }
 
-  writeToFirebase(mockref) {
-    let updates = {};
-    let firebaseref = mockref || firebasedb.ref();
-    let path = `indivisible_groups/`;
+  writeToFirebase() {
     let emailpath = 'indivisible_group_emails/';
     let newPostKey = this.id;
     if (this.email) {
-      updates[emailpath + newPostKey] = this.email;
+      firebasedb.ref(emailpath).update({[newPostKey]: this.email});
       this.email = true;
     }
-    updates[path + newPostKey] = this;
-    return firebaseref.update(updates);
+    firebasedb.ref(`indivisible_groups/${newPostKey}`)
+      .update(this);
   }
 
-  static getLatLng(){
+  getLatLng(){
+    let zip = this.zip;
+    if (zip){
+      return firebasedb.ref('zips/'+ zip).once('value')
+        .then(latlog => {
+          if (latlog.exists()){
+            this.longitude = latlog.val().LNG;
+            this.latitude = latlog.val().LAT;
+          }
+        })
+        .catch(() => {
+          console.log('no zip');
+        });
+    }
+  }
+
+  static getAllLatLng(){
     firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
-      snapshot.forEach(group=> {
+      snapshot.forEach(group => {
         let zip = group.val().zip;
         let id = group.val().id;
         if(zip){
-          firebasedb.ref('zips/'+ zip).once('value').then(latlog=>{
+          firebasedb.ref('zips/'+ zip).once('value').then(latlog => {
             if (latlog.exists()){
               let updateObj = {};
               updateObj.longitude = latlog.val().LNG;

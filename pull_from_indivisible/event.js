@@ -1,6 +1,6 @@
 const moment = require('moment');
 const lodash = require('lodash');
-const firebasedb = require('../lib/setup-firebase');
+const firebasedb = require('../lib/setup-indivisible-firebase');
 
 class IndEvent {
   constructor(response) {

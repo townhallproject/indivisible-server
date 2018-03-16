@@ -92,8 +92,8 @@ class IndTownHall {
       },
       function (error, response, body) {
         if (error || response.statusCode >= 400) {
-          console.log('er', response.body, eventID);
-          let newerrorEmail = new errorReport(response.body, `Issue with posting to indivisible: ${eventID}`);
+          console.log('er', error, eventID);
+          let newerrorEmail = new errorReport(error, `Issue with posting to indivisible: ${eventID}`);
           return newerrorEmail.sendEmail();
         }
         if (!error && response.statusCode == 201) {
