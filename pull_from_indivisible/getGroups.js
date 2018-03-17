@@ -26,20 +26,29 @@ const allGroups = [];
 function getAllData(pageNumber){
   return requestData(url + path, pageNumber)
     .then((response) => {
-      console.log('got response');
       response.body.forEach((ele) => {
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
         if (localGroupSubtype.value === 140251) {
           let newGroup = new Group(ele);
-          newGroup.writeToFirebase();
-          newGroup.getLatLng();
-          allGroups.push(newGroup);
+          newGroup.getLatLng()
+            .then(latlog => {
+              console.log(latlog.val());
+              if (latlog.exists()) {
+                newGroup.longitude = latlog.val().LNG;
+                newGroup.latitude = latlog.val().LAT;
+              }
+              newGroup.writeToFirebase();
+
+              allGroups.push(newGroup);
+            })
+            .catch(() => {
+              console.log('no zip');
+            });
         }
       });
       return pageNumber;
     })
     .then((pageNumber)=> {
-      console.log('return page number', pageNumber);
       if (pageNumber < 42) {
         console.log(pageNumber++);
         return getAllData(pageNumber++);

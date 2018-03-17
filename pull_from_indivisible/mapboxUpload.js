@@ -9,7 +9,6 @@ const uploadToMapbox = (url) => {
     url: url,
     name: 'group-dataset',
   };
-  console.log(url);
   superagent
     .post(`${mapboxapi}/${process.env.MAPBOX_USERNAME}?access_token=${process.env.MAPBOX_ACCESS_TOKEN}`)
     .send(data)

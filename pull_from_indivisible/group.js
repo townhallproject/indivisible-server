@@ -1,5 +1,6 @@
 const lodash = require('lodash');
 const superagent = require('superagent');
+const thpFirebaseDb = require('../lib/setup-firebase');
 const firebasedb = require('../lib/setup-indivisible-firebase');
 /*
 if custom field id 109116 (Local Group Subtype)
@@ -38,17 +39,9 @@ class Group {
   getLatLng(){
     let zip = this.zip;
     if (zip){
-      return firebasedb.ref('zips/'+ zip).once('value')
-        .then(latlog => {
-          if (latlog.exists()){
-            this.longitude = latlog.val().LNG;
-            this.latitude = latlog.val().LAT;
-          }
-        })
-        .catch(() => {
-          console.log('no zip');
-        });
+      return thpFirebaseDb.ref('zips/'+ zip).once('value');
     }
+    return Promise.resolve();
   }
 
   static getAllLatLng(){
@@ -57,12 +50,12 @@ class Group {
         let zip = group.val().zip;
         let id = group.val().id;
         if(zip){
-          firebasedb.ref('zips/'+ zip).once('value').then(latlog => {
+          return firebasedb.ref('zips/'+ zip).once('value').then(latlog => {
             if (latlog.exists()){
               let updateObj = {};
               updateObj.longitude = latlog.val().LNG;
               updateObj.latitude = latlog.val().LAT;
-              firebasedb.ref('indivisible_groups/' + id).update(updateObj);
+              return firebasedb.ref('indivisible_groups/' + id).update(updateObj);
             }
           });
         }
