@@ -1,6 +1,6 @@
 const superagent = require('superagent');
 const lodash = require('lodash');
-
+const firebasedb = require('../lib/setup-indivisible-firebase');
 const url = 'https://api.prosperworks.com';
 const path = '/developer_api/v1/companies/search';
 // const path = '/developer_api/v1/custom_field_definitions';
@@ -17,11 +17,15 @@ function requestData(url, pageNumber) {
     .set('Content-Type', 'application/json')
     .send({'page_size':200,
       'page_number': pageNumber,
-      'sort_by': 'last_interaction',
+      'sort_by': 'date_modified',
       'sort_direction': 'desc'});
 }
 
 const allGroups = [];
+const count = {
+  noaddress: 0,
+  notPublic: 0,
+};
 
 function getAllData(pageNumber){
   return requestData(url + path, pageNumber)
@@ -30,31 +34,36 @@ function getAllData(pageNumber){
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
         if (localGroupSubtype.value === 140251) {
           let newGroup = new Group(ele);
-          newGroup.getLatLng()
-            .then(latlog => {
-              console.log(latlog.val());
-              if (latlog.exists()) {
-                newGroup.longitude = latlog.val().LNG;
-                newGroup.latitude = latlog.val().LAT;
-              }
-              newGroup.writeToFirebase();
+          firebasedb.ref('indivisible_groups/' + newGroup.id).once('value')
+            .then(group => {
+              if (!group.val().latitude) {
 
-              allGroups.push(newGroup);
-            })
-            .catch(() => {
-              console.log('no zip');
+                newGroup.getLatLng()
+                  .then(() => {
+                    newGroup.writeToFirebase();
+                    allGroups.push(newGroup);
+                  })
+                  .catch((e) => {
+                    console.log('returned error:', e);
+                    count.noaddress ++;
+                  });
+              } else {
+                console.log('already got latitude');
+              }
             });
+        } else {
+          count.notPublic ++;
         }
       });
       return pageNumber;
     })
     .then((pageNumber)=> {
-      if (pageNumber < 42) {
+      if (pageNumber < 43) {
         console.log(pageNumber++);
         return getAllData(pageNumber++);
       }
       else {
-        console.log('got all of them');
+        console.log('got all of them', allGroups.length, count.noadress, count.notPublic);
         const geoJSON = makeGeoJSON(allGroups);
         uploadToS3(geoJSON);
       }

@@ -1,5 +1,5 @@
 const moment = require('moment');
-const request = require('request');
+const request = require('superagent');
 
 const firebasedb = require('../lib/setup-firebase');
 const errorReport = require('../lib/error-reporting');
@@ -14,34 +14,36 @@ class IndTownHall {
       if (addList[addList.length - 1] === 'United States') {
         addList.splice(addList.length - 1);
       }
-      zip = addList[addList.length - 1].split(' ')[1];
-      city = addList[addList.length - 2];
+      zip = addList[addList.length - 1].split(' ')[1] || '';
+      city = addList[addList.length - 2] || '';
       addList.splice(addList.length - 2, 2);
       address = addList.join(', ');
     }
     this.event_title;
     let prefix;
+    let district;
     if (cur.flagIcon === 'campaign'){
       prefix = '';
-    }
-    else if (cur.district && !cur.thp_id) {
+    } else if (cur.district && !cur.thp_id) {
       prefix = 'Rep.';
+      district = `${cur.state}-${Number(cur.district)}`;
     } else {
       prefix = 'Sen.';
+      district = 'Senate';
     }
     if (cur.iconFlag === 'staff') {
-      this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + cur.District + ')';
+      this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + district + ')';
     } else if (cur.meetingType === 'Other') {
-      this.event_title = prefix + ' ' + cur.Member + ' (' + cur.District + ') ';
+      this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ';
     } else {
-      this.event_title = prefix + ' ' + cur.Member + ' (' + cur.District + ') ' + cur.meetingType;
+      this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ' + cur.meetingType;
     }
 
     this.event_starts_at_date = moment(cur.dateObj).format('L');
     this.event_starts_at_time = cur.Time.split(' ')[0];
     this.event_starts_at_ampm = cur.Time.split(' ')[1].toLowerCase();
     this.event_venue = this.getVenue(cur);
-    this.event_address1 = address;
+    this.event_address1 = address || '';
     this.event_host_ground_rules = '1';
     this.event_host_requirements = '1';
     this.event_city = city;
@@ -80,31 +82,47 @@ class IndTownHall {
     const user = process.env.ACTION_KIT_USERNAME;
     const password = process.env.ACTION_KIT_PASS;
     const url = 'https://act.indivisibleguide.com/rest/v1/action/';
-    request.post(
-      url,
-      {
-        json: townHall,
-        auth:
-        {
-          'user' : user,
-          'pass' : password,
-        },
-      },
-      function (error, response, body) {
-        if (error || response.statusCode >= 400) {
-          console.log('er', error, eventID);
-          let newerrorEmail = new errorReport(error, `Issue with posting to indivisible: ${eventID}`);
-          return newerrorEmail.sendEmail();
-        }
-        if (!error && response.statusCode == 201) {
-          let path = body['event'].toString();
-          console.log(path);
-          firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
-          firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
-        }
+    return request
+      .post(url)
+      .auth(user, password)
+      .send(townHall)
+      .then(res=> {
+        let path = res.body.event;
+        console.log(path);
+        firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
+        firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
+      })
+      .catch(err => {
+        console.log('er', err.error, eventID);
+        let newerrorEmail = new errorReport(err, `Issue with posting to indivisible: ${eventID}`);
+        return newerrorEmail.sendEmail();
       });
   }
 
+  updateEvent(eventID, path){
+    let townHall = this;
+    const user = process.env.ACTION_KIT_USERNAME;
+    const password = process.env.ACTION_KIT_PASS;
+    // ex '/rest/v1/event/8328/'
+    const url = `https://act.indivisibleguide.com${path}`;
+    return request
+      .put(url)
+      .auth(user, password)
+      .send({
+        address1: townHall.event_address1,
+        city: townHall.event_city,
+        title: townHall.event_title,
+        venue: townHall.event_venue,
+        public_description: townHall.event_public_description,
+        zip: townHall.event_postal,
+      })
+      .then(res=> {
+        console.log('res', res.body);
+      })
+      .catch(err=> {
+        console.log(err, path);
+      });
+  }
 }
 
 module.exports = IndTownHall;

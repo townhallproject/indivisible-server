@@ -38,10 +38,51 @@ class Group {
 
   getLatLng(){
     let zip = this.zip;
-    if (zip){
-      return thpFirebaseDb.ref('zips/'+ zip).once('value');
+    let group = this;
+
+    if (zip) {
+      return thpFirebaseDb.ref('zips/'+ zip).once('value')
+        .then(latlog=> {
+          if (latlog.exists()) {
+            this.longitude = latlog.val().LNG;
+            this.latitude = latlog.val().LAT;
+            return this;
+          }
+          return group.updateLatLng();
+        });
+    } else if (this.state) {
+      return group.updateLatLng();
     }
-    return Promise.resolve();
+    return Promise.reject('no address');
+  }
+
+  updateLatLng(){
+    let address;
+    if (this.city && this.state) {
+      address = `${this.city},+${this.state}`;
+    } else if (this.state) {
+      address = `${this.state}`;
+    }
+    else {
+      return Promise.reject('no address');
+    }
+    address = address.replace(/\s/g, '+');
+    return superagent
+      .get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB868a1cMyPOQyzKoUrzbw894xeoUhx9MM')
+      .query({ 'address': escape(address) })
+      .then((r) => {
+        const response = r.body;
+        if (response.results.length > 0 && response.results[0].geometry.location.lat) {
+          this.latitude = response.results[0].geometry.location.lat;
+          this.longitude = response.results[0].geometry.location.lng;
+          return this;
+        } else {
+          return Promise.reject(response);
+        }
+      })
+      .catch(e => {
+        console.log('geocode error:', e, address);
+      });
   }
 
   static getAllLatLng(){
@@ -61,33 +102,6 @@ class Group {
         }
       });
     });
-  }
-
-  static updateLatLng(city, state, id){
-    let address;
-    if (city && state) {
-      address = `${city},${state}`;
-    } else if (state) {
-      address = `${state}`;
-    }
-    return superagent
-      .get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB868a1cMyPOQyzKoUrzbw894xeoUhx9MM')
-      .query({ 'address': address })
-      .then((r) => {
-        const response = r.body;
-        if (response.results.length > 0 && response.results[0].geometry.location.lat) {
-          const latitude = response.results[0].geometry.location.lat;
-          const longitude = response.results[0].geometry.location.lng;
-          let path = `indivisible_groups/${id}`;
-          return firebasedb.ref(path).update({latitude, longitude});
-        } else {
-          console.log(response, city, state, id);
-        }
-
-      })
-      .catch(e => {
-        console.log(e.message, address, id);
-      });
   }
 }
 
