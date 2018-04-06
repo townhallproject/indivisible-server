@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const firebasedb = require('../lib/setup-firebase');
+const firebasedb = require('../lib/setup-indivisible-firebase');
 
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');

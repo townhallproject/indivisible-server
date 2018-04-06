@@ -42,6 +42,7 @@ class IndEvent {
   checkDateAndRemove() {
     if (!moment(this.starts_at_utc).isAfter()) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      ref.set(null);
       return ref.remove();
     }
   }
