@@ -28,6 +28,10 @@ class IndEvent {
     if (!moment(this.starts_at_utc).isAfter()) {
       return;
     }
+    if (!this.host_is_confirmed){
+      console.log('host is not confirmed, dont add')
+      return;
+    }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
     let path = `indivisible_public_events/`;
