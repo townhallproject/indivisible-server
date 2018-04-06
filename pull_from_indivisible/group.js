@@ -11,6 +11,10 @@ if custom field 109096 has a value get the email
 class Group {
   constructor(res) {
     const email = lodash.find(res.custom_fields, {custom_field_definition_id: 109096});
+    const facebook = lodash.find(res.socials, { category: 'facebook' });
+    const twitter = lodash.find(res.socials, { category: 'twitter' });
+    this.facebook = facebook ? facebook.url: null;
+    this.twitter = twitter ? twitter.url: null;
     this.email = email ? email.value : null;
     this.zip = res.address ? res.address.postal_code: null;
     this.city = res.address ? res.address.city: null;
@@ -49,6 +53,8 @@ class Group {
             return this;
           }
           return group.updateLatLng();
+        }).catch(err=> {
+          console.log('error getting lat lng from firebase', err);
         });
     } else if (this.state) {
       return group.updateLatLng();
@@ -67,15 +73,16 @@ class Group {
       return Promise.reject('no address');
     }
     address = address.replace(/\s/g, '+');
+    let group = this;
     return superagent
       .get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB868a1cMyPOQyzKoUrzbw894xeoUhx9MM')
       .query({ 'address': escape(address) })
       .then((r) => {
         const response = r.body;
         if (response.results.length > 0 && response.results[0].geometry.location.lat) {
-          this.latitude = response.results[0].geometry.location.lat;
-          this.longitude = response.results[0].geometry.location.lng;
-          return this;
+          group.latitude = response.results[0].geometry.location.lat;
+          group.longitude = response.results[0].geometry.location.lng;
+          return group;
         } else {
           return Promise.reject(response);
         }
@@ -98,6 +105,8 @@ class Group {
               updateObj.latitude = latlog.val().LAT;
               return firebasedb.ref('indivisible_groups/' + id).update(updateObj);
             }
+          }).catch(()=> {
+            console.log('error getting all lat lng');
           });
         }
       });

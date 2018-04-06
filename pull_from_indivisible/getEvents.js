@@ -41,7 +41,7 @@ function getAllData(path){
         console.log('next', res.next);
         return getAllData(res.next);
       }
-      return console.log('got all');
+      return console.log('got all events');
     })
     .catch(console.log);
 }

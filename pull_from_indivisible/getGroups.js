@@ -36,19 +36,23 @@ function getAllData(pageNumber){
           let newGroup = new Group(ele);
           firebasedb.ref('indivisible_groups/' + newGroup.id).once('value')
             .then(group => {
-              if (!group.val().latitude) {
-
+              if (group.exists() && group.val().latitude && group.val().longitude) {
+                // still need to add to tileset
+                newGroup.longitude = group.val().longitude;
+                newGroup.latitude = group.val().latitude;
+                newGroup.writeToFirebase();
+                allGroups.push(newGroup);
+              } else if (!group.exists() || !group.val().latitude) {
                 newGroup.getLatLng()
                   .then(() => {
+                    console.log('got lat lng');
                     newGroup.writeToFirebase();
                     allGroups.push(newGroup);
                   })
                   .catch((e) => {
-                    console.log('returned error:', e);
+                    console.log('no lat lng for group:', e);
                     count.noaddress ++;
                   });
-              } else {
-                console.log('already got latitude');
               }
             });
         } else {
@@ -59,11 +63,11 @@ function getAllData(pageNumber){
     })
     .then((pageNumber)=> {
       if (pageNumber < 43) {
-        console.log(pageNumber++);
+        console.log('next group', pageNumber++);
         return getAllData(pageNumber++);
       }
       else {
-        console.log('got all of them', allGroups.length, count.noadress, count.notPublic);
+        console.log('got all groups', allGroups.length, count.noadress, count.notPublic);
         const geoJSON = makeGeoJSON(allGroups);
         uploadToS3(geoJSON);
       }

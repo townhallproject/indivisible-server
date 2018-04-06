@@ -9,8 +9,11 @@ class Point {
       icon: group.icon,
       city: group.city,
       state: group.state,
+      email: group.email || false,
+      twitter: group.twitter || false,
+      facebook: group.facebook || false,
       title: group.title || group.name,
-      id: group.id || null,
+      id: group.id || false,
     };
   }
 }
