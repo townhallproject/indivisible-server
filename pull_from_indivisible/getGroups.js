@@ -40,14 +40,14 @@ function getAllData(pageNumber){
                 // still need to add to tileset
                 newGroup.longitude = group.val().longitude;
                 newGroup.latitude = group.val().latitude;
-                newGroup.writeToFirebase();
                 allGroups.push(newGroup);
+                newGroup.writeToFirebase();
               } else if (!group.exists() || !group.val().latitude) {
                 newGroup.getLatLng()
                   .then(() => {
                     console.log('got lat lng');
-                    newGroup.writeToFirebase();
                     allGroups.push(newGroup);
+                    newGroup.writeToFirebase();
                   })
                   .catch((e) => {
                     console.log('no lat lng for group:', e);

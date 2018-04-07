@@ -32,12 +32,13 @@ class Group {
   writeToFirebase() {
     let emailpath = 'indivisible_group_emails/';
     let newPostKey = this.id;
+    let groupCopy = Object.assign({}, this);
     if (this.email) {
       firebasedb.ref(emailpath).update({[newPostKey]: this.email});
-      this.email = true;
+      groupCopy.email = true;
     }
     firebasedb.ref(`indivisible_groups/${newPostKey}`)
-      .update(this);
+      .update(groupCopy);
   }
 
   getLatLng(){
