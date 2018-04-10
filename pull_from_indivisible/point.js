@@ -32,7 +32,6 @@ module.exports = (items) => {
       group.icon = 'circle-15-blue';
       group.filterBy = false;
       group.color = '#1cb7ec';
-      console.log(group.email)
       const newFeature = new Point(group);
       return newFeature;
     });

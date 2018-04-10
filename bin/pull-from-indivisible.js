@@ -15,6 +15,8 @@ getEvents(townHallPath);
 firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
   indEvent.checkDateAndRemove();
+  indEvent.checkStatusAndRemove();
+  indEvent.checkPublicAndRemove();
 });
 
 getGroups(1);

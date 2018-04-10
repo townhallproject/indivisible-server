@@ -31,6 +31,14 @@ class IndEvent {
     if (!this.host_is_confirmed){
       return;
     }
+    if (this.status !== 'active') {
+      console.log('not active', this.id);
+      return;
+    }
+    if (this.is_private) {
+      console.log('not public', this.id);
+      return;
+    }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
     let path = `indivisible_public_events/`;
@@ -41,6 +49,22 @@ class IndEvent {
 
   checkDateAndRemove() {
     if (!moment(this.starts_at_utc).isAfter()) {
+      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      ref.set(null);
+      return ref.remove();
+    }
+  }
+
+  checkStatusAndRemove() {
+    if (this.status !== 'active') {
+      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      ref.set(null);
+      return ref.remove();
+    }
+  }
+
+  checkPublicAndRemove() {
+    if (this.is_private) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
