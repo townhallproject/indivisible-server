@@ -86,11 +86,21 @@ class IndTownHall {
       .post(url)
       .auth(user, password)
       .send(townHall)
-      .then(res=> {
+      .then(res => {
         let path = res.body.event;
-        console.log(path);
         firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
         firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
+        return path;
+      })
+      .then(path => {
+        const url = `https://act.indivisibleguide.com${path}`;
+        console.log(url);
+        return request
+          .put(url)
+          .auth(user, password)
+          .send({
+            is_approved: 'true',
+          });
       })
       .catch(err => {
         console.log('er', err.error, eventID);
@@ -115,6 +125,7 @@ class IndTownHall {
         venue: townHall.event_venue,
         public_description: townHall.event_public_description,
         zip: townHall.event_postal,
+        is_approved: 'true',
       })
       .then(res=> {
         console.log('res', res.body);
