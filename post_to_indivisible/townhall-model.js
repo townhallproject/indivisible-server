@@ -100,6 +100,7 @@ class IndTownHall {
           .auth(user, password)
           .send({
             is_approved: 'true',
+            host_is_confirmed: 'true',
           });
       })
       .catch(err => {
@@ -126,6 +127,7 @@ class IndTownHall {
         public_description: townHall.event_public_description,
         zip: townHall.event_postal,
         is_approved: 'true',
+        host_is_confirmed: 'true',
       })
       .then(res=> {
         console.log('res', res.body);
