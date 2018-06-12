@@ -65,12 +65,13 @@ class Group {
 
   updateLatLng(){
     let address;
-    if (this.city && this.state) {
+    if(this.city && this.state && this.zip) {
+      address = `${this.city},+${this.state},+${this.zip}`;
+    } else if (this.city && this.state) {
       address = `${this.city},+${this.state}`;
     } else if (this.state) {
       address = `${this.state}`;
-    }
-    else {
+    } else {
       return Promise.reject('no address');
     }
     address = address.replace(/\s/g, '+');
