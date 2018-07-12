@@ -25,14 +25,10 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-    if (!moment(this.starts_at_utc).isAfter()) {
+    if (moment(this.starts_at).isBefore()) {
       return;
     }
     if (!this.host_is_confirmed){
-      return;
-    }
-    if (this.status !== 'active') {
-      console.log('not active', this.id);
       return;
     }
     if (this.is_private) {
@@ -48,7 +44,7 @@ class IndEvent {
   }
 
   checkDateAndRemove() {
-    if (!moment(this.starts_at_utc).isAfter()) {
+    if (moment(this.starts_at_utc).isBefore()) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
