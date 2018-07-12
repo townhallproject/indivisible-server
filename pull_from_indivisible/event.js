@@ -26,13 +26,19 @@ class IndEvent {
 
   writeToFirebase(mockref) {
     if (moment(this.starts_at).isBefore()) {
+      this.removeOne();
       return;
     }
     if (!this.host_is_confirmed){
+      this.removeOne();
+      return;
+    }
+    if (this.status !== 'active') {
+      this.removeOne();
       return;
     }
     if (this.is_private) {
-      console.log('not public', this.id);
+      this.removeOne();
       return;
     }
     let updates = {};
@@ -41,6 +47,17 @@ class IndEvent {
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
     return firebaseref.update(updates);
+  }
+
+  removeOne(){
+    const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+    ref.once('value', (snapshot) => {
+      if (snapshot.exists()){
+        console.log('removing', this.id);
+        ref.set(null);
+        return ref.remove();
+      }
+    });
   }
 
   checkDateAndRemove() {
