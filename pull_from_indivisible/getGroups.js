@@ -32,8 +32,8 @@ function getAllData(pageNumber){
     .then((response) => {
       response.body.forEach((ele) => {
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
+        let newGroup = new Group(ele);
         if (localGroupSubtype.value === 140251) {
-          let newGroup = new Group(ele);
           firebasedb.ref('indivisible_groups/' + newGroup.id).once('value')
             .then(group => {
               if (group.exists() && group.val().latitude && group.val().longitude) {
@@ -56,6 +56,14 @@ function getAllData(pageNumber){
               }
             });
         } else {
+          let ref = firebasedb.ref(`indivisible_groups/${newGroup.id}`);
+          ref.once('value')
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                console.log('removing not public');
+                ref.remove();
+              }
+            });
           count.notPublic ++;
         }
       });
