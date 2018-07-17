@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest -i --coverage --forceExit",
     "lint": "eslint --fix .",
-    "start": "node index.js"
+    "start": "node index.js",
+    "pull": "node bin/pull-from-indivisible" 
   },
   "repository": {
     "type": "git",
