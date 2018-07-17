@@ -35,14 +35,17 @@ function getAllData(pageNumber){
         let newGroup = new Group(ele);
         if (localGroupSubtype.value === 140251) {
           firebasedb.ref('indivisible_groups/' + newGroup.id).once('value')
-            .then(group => {
-              if (group.exists() && group.val().latitude && group.val().longitude) {
+            .then(groupInFirebase => {
+              if (groupInFirebase.exists() &&
+              groupInFirebase.val().longitude &&
+              groupInFirebase.val().latitude &&
+              !newGroup.hasBeenChanged(groupInFirebase.val())) {
                 // still need to add to tileset
-                newGroup.longitude = group.val().longitude;
-                newGroup.latitude = group.val().latitude;
+                newGroup.longitude = groupInFirebase.val().longitude;
+                newGroup.latitude = groupInFirebase.val().latitude;
                 allGroups.push(newGroup);
                 newGroup.writeToFirebase();
-              } else if (!group.exists() || !group.val().latitude) {
+              } else {
                 newGroup.getLatLng()
                   .then(() => {
                     console.log('got lat lng');

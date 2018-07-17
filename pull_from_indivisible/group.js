@@ -41,6 +41,24 @@ class Group {
       .update(groupCopy);
   }
 
+  hasBeenChanged(groupInFirebase){
+    let toCheck = ['city', 'state', 'zip'];
+    let changed = false;
+    toCheck.forEach((ele) => {
+      if (!groupInFirebase[ele] && this[ele]) {
+        console.log('values added', ele, this.id);
+        changed = true;
+      } else if (this[ele] && groupInFirebase[ele] && this[ele] !== groupInFirebase[ele]) {
+        console.log('values updated', ele, this.id);
+        changed = true;
+      } else if (groupInFirebase[ele] && !this[ele]){
+        console.log('values deleted', ele, this.id);
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
   getLatLng(){
     let zip = this.zip;
     let group = this;
