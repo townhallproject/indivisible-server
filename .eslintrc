@@ -3,7 +3,8 @@
     "err": true,
     "req": true,
     "res": true,
-    "next": true
+    "next": true,
+    "expect": true
   },
   "env": {
     "es6": true,
