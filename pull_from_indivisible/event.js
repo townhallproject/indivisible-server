@@ -9,12 +9,19 @@ class IndEvent {
         this[key] = response[key];
       }
     }
-    const eventType = response.fields.filter(obj => obj.name === 'event_type');
     const issueFocus = response.fields.filter(obj => obj.name === 'event_issue_focus');
     const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
-    if (eventType.length > 0) {
-      this.eventType = eventType[0].value;
-    }
+
+    this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
+    this.campaignNo = this.campaign.split('/').splice(-2, 1)[0];
+    this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
+    this.eventType = IndEvent.upPackField(response.fields, 'event_type');
+    this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') === 'No promoter equipped with this actionkit config.' ? null : IndEvent.upPackField(response.fields, 'group_name');
+    this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
+    this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring');
+    this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
+    //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
+    this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus.length > 0) {
       this.issueFocus = issueFocus[0].value;
     } else if (townHall.length > 0) {
@@ -22,6 +29,13 @@ class IndEvent {
     } else {
       this.issueFocus = false;
     }
+  }
+
+  static upPackField(fields, fieldName) {
+    const result = lodash.filter(fields, {
+      name: fieldName,
+    });
+    return result.length > 0 ? result[0].value : null;
   }
 
   writeToFirebase(mockref) {
@@ -38,6 +52,14 @@ class IndEvent {
       return;
     }
     if (this.is_private) {
+      this.removeOne();
+      return;
+    }
+    if (this.address1 === 'This event is virtual, Washington, DC 20301'){
+      this.removeOne();
+      return;
+    }
+    if (this.isVirtualEvent === 'Yes') {
       this.removeOne();
       return;
     }
