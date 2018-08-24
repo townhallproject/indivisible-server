@@ -9,11 +9,11 @@ class IndEvent {
         this[key] = response[key];
       }
     }
-    const issueFocus = response.fields.filter(obj => obj.name === 'event_issue_focus');
+    const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
     const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
 
     this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
-    this.campaignNo = this.campaign.split('/').splice(-2, 1)[0];
+    this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
     this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
     this.eventType = IndEvent.upPackField(response.fields, 'event_type');
     this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') === 'No promoter equipped with this actionkit config.' ? null : IndEvent.upPackField(response.fields, 'group_name');
@@ -22,9 +22,9 @@ class IndEvent {
     this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
-    if (issueFocus.length > 0) {
+    if (issueFocus && issueFocus.length > 0) {
       this.issueFocus = issueFocus[0].value;
-    } else if (townHall.length > 0) {
+    } else if (townHall && townHall.length > 0) {
       this.issueFocus = 'Town Hall';
     } else {
       this.issueFocus = false;
@@ -40,27 +40,27 @@ class IndEvent {
 
   writeToFirebase(mockref) {
     if (moment(this.starts_at).isBefore()) {
-      this.removeOne();
+      this.removeOne('is in past');
       return;
     }
     if (!this.host_is_confirmed){
-      this.removeOne();
+      this.removeOne('not not confirmed');
       return;
     }
     if (this.status !== 'active') {
-      this.removeOne();
+      this.removeOne('not active');
       return;
     }
     if (this.is_private) {
-      this.removeOne();
+      this.removeOne('is private');
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
-      this.removeOne();
+      this.removeOne('virtual');
       return;
     }
     if (this.isVirtualEvent === 'Yes') {
-      this.removeOne();
+      this.removeOne('virtual');
       return;
     }
     let updates = {};
@@ -71,11 +71,11 @@ class IndEvent {
     return firebaseref.update(updates);
   }
 
-  removeOne(){
+  removeOne(reason){
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-    ref.once('value', (snapshot) => {
+    return ref.once('value', (snapshot) => {
       if (snapshot.exists()){
-        console.log('removing', this.id);
+        console.log('removing', this.id, reason);
         ref.set(null);
         return ref.remove();
       }

@@ -1,4 +1,5 @@
 const superagent = require('superagent');
+const moment = require('moment');
 const url = 'https://indivisible.actionkit.com';
 
 const IndEvent = require('./event');
@@ -10,13 +11,34 @@ function requestData(url) {
 }
 
 
-function getAllData(path){
+function getAllData(path) {
+  const recurringEvents = {};
   return requestData(url + path)
     .then((response) => {
       response.body.objects.forEach((ele) => {
         let newEvent = new IndEvent(ele);
         if (!newEvent.issueFocus) {
           return;
+        }
+        if (newEvent.isRecurring) {
+          if (!recurringEvents[newEvent.mobilizeId]) {
+            recurringEvents[newEvent.mobilizeId] = {
+              id: newEvent.id,
+              starts_at: newEvent.starts_at,
+            };
+          } else {
+            let currentSoonest = recurringEvents[newEvent.mobilizeId];
+            if (moment(newEvent.starts_at).isBefore(currentSoonest.starts_at)) {
+              recurringEvents[newEvent.mobilizeId] = {
+                id: newEvent.id,
+                starts_at: newEvent.starts_at,
+              };
+              let toRemove = new IndEvent(currentSoonest);
+              toRemove.removeOne('found earlier recurring event');
+            } else {
+              return newEvent.removeOne('recurring');
+            }
+          }
         }
         if (newEvent.creator !== '/rest/v1/user/393393/') {
           //get group name
