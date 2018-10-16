@@ -55,6 +55,10 @@ class IndEvent {
       this.removeOne('is private');
       return;
     }
+    if (this.zip === '20301') {
+      this.removeOne('zip is 20301');
+      return;
+    }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
       this.removeOne('virtual');
       return;

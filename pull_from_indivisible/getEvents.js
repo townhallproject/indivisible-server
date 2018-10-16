@@ -1,7 +1,7 @@
 const superagent = require('superagent');
 const moment = require('moment');
 const url = 'https://indivisible.actionkit.com';
-
+const testing = process.env.NODE_ENV !== 'production';
 const IndEvent = require('./event');
 
 function requestData(url) {
@@ -59,7 +59,7 @@ function getAllData(path) {
       return response.body.meta;
     })
     .then((res) => {
-      if (res.next) {
+      if (res.next && testing) {
         console.log('next', res.next);
         return getAllData(res.next);
       }
