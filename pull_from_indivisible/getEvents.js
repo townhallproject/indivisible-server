@@ -59,8 +59,10 @@ function getAllData(path) {
       return response.body.meta;
     })
     .then((res) => {
-      if (res.next && testing) {
-        console.log('next', res.next);
+      if (res.next) {
+        if (testing) {
+          console.log('next', res.next);
+        }
         return getAllData(res.next);
       }
       return console.log('got all events');
