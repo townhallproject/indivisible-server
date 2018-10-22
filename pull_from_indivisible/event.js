@@ -55,7 +55,7 @@ class IndEvent {
       this.removeOne('is private');
       return;
     }
-    if (this.zip === '20301') {
+    if (this.postal === '20301') {
       this.removeOne('zip is 20301');
       return;
     }
