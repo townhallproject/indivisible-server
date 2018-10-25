@@ -39,6 +39,9 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
+    if (this.id === '100918'){
+      console.log('got 100918');
+    }
     if (moment(this.starts_at).isBefore()) {
       this.removeOne('is in past');
       return;
@@ -55,8 +58,8 @@ class IndEvent {
       this.removeOne('is private');
       return;
     }
-    if (this.postal === '20301') {
-      this.removeOne('zip is 20301');
+    if (this.postal == '20301' || this.postal === '00840') {
+      this.removeOne('zip', this.postal);
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
@@ -104,6 +107,15 @@ class IndEvent {
 
   checkPublicAndRemove() {
     if (this.is_private) {
+      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      ref.set(null);
+      return ref.remove();
+    }
+  }
+
+  checkPostalAndRemove() {
+    if (this.postal === '20301' || this.postal === '00840') {
+      console.log('removing zip', this.postal)
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
