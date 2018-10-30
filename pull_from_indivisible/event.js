@@ -13,7 +13,7 @@ class IndEvent {
     const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
 
     this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
-    this.displayAltLink = !!IndEvent.upPackField(response.fields, 'action_display_alt_link');
+    this.displayAltLink = IndEvent.upPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
     this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
     this.eventType = IndEvent.upPackField(response.fields, 'event_type');
