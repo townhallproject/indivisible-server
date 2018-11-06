@@ -40,9 +40,7 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-    if (this.id === '100918'){
-      console.log('got 100918');
-    }
+
     if (moment(this.starts_at).isBefore()) {
       this.removeOne('is in past');
       return;
@@ -116,7 +114,6 @@ class IndEvent {
 
   checkPostalAndRemove() {
     if (this.postal === '20301' || this.postal === '00840') {
-      console.log('removing zip', this.postal)
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();

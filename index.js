@@ -13,4 +13,4 @@ app.get('*', function(request, response) {
 server.start(app, PORT)
   .then(console.log)
   .then(database)
-  .catch(console.log);
+  .catch((err) => console.log('request error', err));
