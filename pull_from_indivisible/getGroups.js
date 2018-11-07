@@ -4,6 +4,8 @@ const firebasedb = require('../lib/setup-indivisible-firebase');
 const url = 'https://api.prosperworks.com';
 const path = '/developer_api/v1/companies/search';
 // const path = '/developer_api/v1/custom_field_definitions';
+const testing = process.env.NODE_ENV !== 'production';
+
 const Group = require('./group');
 const makeGeoJSON = require('./point');
 const uploadToS3 = require('./mapboxUpload');
@@ -74,7 +76,10 @@ function getAllData(pageNumber){
     })
     .then((pageNumber)=> {
       if (pageNumber < 43) {
-        console.log('next group', pageNumber++);
+        if (testing){
+
+          console.log('next group', pageNumber++);
+        }
         return getAllData(pageNumber++);
       }
       else {

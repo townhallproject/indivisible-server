@@ -84,10 +84,6 @@ class IndEvent {
         console.log('removing', this.id, reason);
         ref.set(null);
         return ref.remove();
-      } else {
-        if (reason !== 'is in past') {
-          console.log('not adding', reason);
-        }
       }
     });
   }
