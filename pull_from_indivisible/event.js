@@ -42,6 +42,7 @@ class IndEvent {
   writeToFirebase(mockref) {
 
     if (moment(this.starts_at).isBefore()) {
+      console.log(this.starts_at, moment());
       this.removeOne('is in past');
       return;
     }
