@@ -41,9 +41,9 @@ class IndEvent {
 
   writeToFirebase(mockref) {
 
-    if (moment(this.starts_at_utc).isBefore()) {
+    if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       console.log(moment(), this.starts_at_utc);
-      // this.removeOne('is in past');
+      this.removeOne('is in past');
       return;
     }
     if (!this.host_is_confirmed){
@@ -82,11 +82,13 @@ class IndEvent {
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
-        console.log(this.starts_at, this.starts_at_utc, moment());
-
         console.log('removing', this.id, reason);
-        ref.set(null);
-        return ref.remove();
+        if (!reason === 'is in past'){
+          ref.set(null);
+          return ref.remove();
+        } else {
+          console.log(this.starts_at, this.starts_at_utc, moment());
+        }
       }
     });
   }
@@ -96,7 +98,7 @@ class IndEvent {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       console.log('in past, removing')
-      // return ref.remove();
+      return ref.remove();
     }
   }
 
