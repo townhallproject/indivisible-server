@@ -32,6 +32,10 @@ const count = {
 function getAllData(pageNumber){
   return requestData(url + path, pageNumber)
     .then((response) => {
+      if (!response.body.length){
+        console.log('end');
+        return 0;
+      }
       response.body.forEach((ele) => {
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
         let newGroup = new Group(ele);
@@ -74,18 +78,19 @@ function getAllData(pageNumber){
       });
       return pageNumber;
     })
-    .then((pageNumber)=> {
-      if (pageNumber < 43) {
-        if (testing){
-
+    .then((pageNumber) => {
+      if (pageNumber) {
+        if (testing) {
           console.log('next group', pageNumber++);
         }
         return getAllData(pageNumber++);
       }
       else {
-        console.log('got all groups', allGroups.length, count.noadress, count.notPublic);
-        const geoJSON = makeGeoJSON(allGroups);
-        uploadToS3(geoJSON);
+        console.log('got all groups', allGroups.length, count.notPublic);
+        if (!testing) {
+          const geoJSON = makeGeoJSON(allGroups);
+          uploadToS3(geoJSON);
+        }
       }
     })
     .catch(e => {
