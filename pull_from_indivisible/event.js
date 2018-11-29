@@ -82,12 +82,8 @@ class IndEvent {
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
         console.log('removing', this.id, reason);
-        if (!reason === 'is in past'){
-          ref.set(null);
-          return ref.remove();
-        } else {
-          console.log(this.starts_at, this.starts_at_utc, moment());
-        }
+        ref.set(null);
+        return ref.remove();
       }
     });
   }
@@ -96,7 +92,6 @@ class IndEvent {
     if (moment(this.starts_at_utc).isBefore()) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
-      console.log('in past, removing')
       return ref.remove();
     }
   }
@@ -105,7 +100,6 @@ class IndEvent {
     if (this.status !== 'active') {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
-      console.log('not active, removing', this.id)
       return ref.remove();
     }
   }
@@ -114,8 +108,6 @@ class IndEvent {
     if (this.is_private) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
-      console.log('not public, removing', this.id)
-
       return ref.remove();
     }
   }
@@ -124,7 +116,6 @@ class IndEvent {
     if (this.postal === '20301' || this.postal === '00840') {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
-      console.log('wrong zip, removing', this.id)
       return ref.remove();
     }
   }
