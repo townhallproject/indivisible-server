@@ -95,7 +95,7 @@ class Group {
     address = address.replace(/\s/g, '+');
     let group = this;
     return superagent
-      .get('https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB868a1cMyPOQyzKoUrzbw894xeoUhx9MM')
+      .get(`https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GEOCODING_KEY}`)
       .query({ 'address': escape(address) })
       .then((r) => {
         const response = r.body;
