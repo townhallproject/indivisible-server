@@ -50,7 +50,8 @@ function getAllData(pageNumber){
                 newGroup.longitude = groupInFirebase.val().longitude;
                 newGroup.latitude = groupInFirebase.val().latitude;
                 allGroups.push(newGroup);
-                newGroup.writeToFirebase();
+              } else if (groupInFirebase.exists() && groupInFirebase.val().address_failed) {
+                console.log('already failed', newGroup.id);
               } else {
                 newGroup.getLatLng()
                   .then(() => {
@@ -61,6 +62,8 @@ function getAllData(pageNumber){
                   .catch((e) => {
                     console.log('no lat lng for group:', e);
                     count.noaddress ++;
+                    newGroup.address_failed = true;
+                    newGroup.writeToFirebase();
                   });
               }
             });
@@ -94,7 +97,7 @@ function getAllData(pageNumber){
       }
     })
     .catch(e => {
-      console.log(e);
+      console.log('error getting all groups', e.message);
     });
 }
 

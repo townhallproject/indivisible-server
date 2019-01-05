@@ -48,8 +48,15 @@ class Group {
       if (!groupInFirebase[ele] && this[ele]) {
         console.log('values added', ele, this.id);
         changed = true;
-      } else if (this[ele] && groupInFirebase[ele] && this[ele] !== groupInFirebase[ele]) {
-        console.log('values updated', ele, this.id);
+      } else if (
+        ele === 'zip' && 
+        groupInFirebase[ele] && 
+        Group.zeroPaddZip(this[ele]) !== Group.zeroPaddZip(groupInFirebase[ele])) {
+        console.log('zip updated', ele, this.id, Group.zeroPaddZip(this[ele]), Group.zeroPaddZip(groupInFirebase[ele]));
+        changed = true;
+      } else if (ele !== 'zip' &&
+        this[ele] && groupInFirebase[ele] && this[ele] !== groupInFirebase[ele]) {
+        console.log('values updated', ele, this.id, this[ele], groupInFirebase[ele]);
         changed = true;
       } else if (groupInFirebase[ele] && !this[ele]){
         console.log('values deleted', ele, this.id);
@@ -60,10 +67,13 @@ class Group {
   }
 
   getLatLng(){
-    let zip = this.zip;
+    let zip = this.zip ? this.zip.toString() : this.zip;
+    if (zip && zip.length < 5) {
+      zip = '00000'.slice(0, 5 - zip.length) + zip;
+    }
     let group = this;
-
-    if (zip) {
+    this.zip = zip;
+    if (zip && zip.length === 5) {
       return thpFirebaseDb.ref('zips/'+ zip).once('value')
         .then(latlog=> {
           if (latlog.exists()) {
@@ -83,7 +93,7 @@ class Group {
 
   updateLatLng(){
     let address;
-    if(this.city && this.state && this.zip) {
+    if(this.city && this.state && this.zip && this.zip.toString().length === 5) {
       address = `${this.city},+${this.state},+${this.zip}`;
     } else if (this.city && this.state) {
       address = `${this.city},+${this.state}`;
@@ -108,11 +118,19 @@ class Group {
         }
       })
       .catch(e => {
-        console.log('geocode error:', e, address);
+        console.log('geocode error:', e, address, group);
+        group.address_failed = true;
+        group.writeToFirebase();
       });
   }
 
-  static getAllLatLng(){
+  static zeroPaddZip(zip) {
+    let padding = '00000';
+    let toBePadded = zip.toString()
+    return padding.slice(0, padding.length - toBePadded.length) + toBePadded;
+  }
+
+  static getAllLatLng() {
     firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
       snapshot.forEach(group => {
         let zip = group.val().zip;
