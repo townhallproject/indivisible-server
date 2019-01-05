@@ -83,10 +83,11 @@ function getAllData(pageNumber){
     })
     .then((pageNumber) => {
       if (pageNumber) {
+        const newNumber = pageNumber + 1;
         if (testing) {
-          console.log('next group', pageNumber++);
+          console.log('next group', newNumber);
         }
-        return getAllData(pageNumber++);
+        return getAllData(newNumber);
       }
       else {
         console.log('got all groups', allGroups.length, count.notPublic);
