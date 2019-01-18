@@ -22,7 +22,7 @@ class Group {
     this.country = res.address ? res.address.country: null;
     this.name = res.name;
     this.id = res.id;
-    this.url = res.websites.url || null;
+    this.url = res.websites.length > 0 ? res.websites[0].url : null;
     this.details = res.details || null;
     this.socials = res.socials || null;
     this.interaction_count = res.interaction_count;
