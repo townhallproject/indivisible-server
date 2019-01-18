@@ -49,6 +49,10 @@ function getAllData(pageNumber){
                 // still need to add to tileset
                 newGroup.longitude = groupInFirebase.val().longitude;
                 newGroup.latitude = groupInFirebase.val().latitude;
+                // check if website has changed
+                if (newGroup.url && newGroup.url !== groupInFirebase.val().url) {
+                  newGroup.writeToFirebase();
+                }
                 allGroups.push(newGroup);
               } else if (groupInFirebase.exists() && groupInFirebase.val().address_failed) {
                 console.log('already failed', newGroup.id);
