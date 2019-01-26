@@ -24,7 +24,7 @@ class Group {
     this.id = res.id;
     this.url = res.websites.length > 0 ? res.websites[0].url : null;
     this.details = res.details || null;
-    this.socials = res.socials || null;
+    this.socials = lodash.filter(res.socials, 'category') || null;
     this.interaction_count = res.interaction_count;
     this.tags = res.tags;
   }
@@ -41,7 +41,28 @@ class Group {
       .update(groupCopy);
   }
 
-  hasBeenChanged(groupInFirebase){
+  dataHasBeenChanged(groupInFirebase) {
+    let toCheck = ['socials', 'url'];
+    let changed = false;
+    
+    toCheck.forEach((ele) => {
+      if (!groupInFirebase[ele] && this[ele] && this[ele].length > 0) {
+        console.log('values added', ele, this.id, this[ele]);
+        changed = true;
+      } else if (
+        this[ele] && groupInFirebase[ele] && !lodash.isEqual(this[ele], groupInFirebase[ele])) {
+        console.log('values updated', ele, this.id, this[ele], groupInFirebase[ele]);
+        changed = true;
+      } else if (groupInFirebase[ele] && (!this[ele] || this[ele].length === 0 )) {
+        console.log('values deleted', ele, this.id);
+        this[ele] = null;
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
+  locationHasBeenChanged(groupInFirebase){
     let toCheck = ['city', 'state', 'zip'];
     let changed = false;
     toCheck.forEach((ele) => {

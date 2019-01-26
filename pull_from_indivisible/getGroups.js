@@ -45,12 +45,12 @@ function getAllData(pageNumber){
               if (groupInFirebase.exists() &&
               groupInFirebase.val().longitude &&
               groupInFirebase.val().latitude &&
-              !newGroup.hasBeenChanged(groupInFirebase.val())) {
+              !newGroup.locationHasBeenChanged(groupInFirebase.val())) {
                 // still need to add to tileset
                 newGroup.longitude = groupInFirebase.val().longitude;
                 newGroup.latitude = groupInFirebase.val().latitude;
                 // check if website has changed
-                if (newGroup.url && newGroup.url !== groupInFirebase.val().url) {
+                if (newGroup.dataHasBeenChanged(groupInFirebase.val())){
                   newGroup.writeToFirebase();
                 }
                 allGroups.push(newGroup);
@@ -96,8 +96,8 @@ function getAllData(pageNumber){
       else {
         console.log('got all groups', allGroups.length, count.notPublic);
         if (!testing) {
-          const geoJSON = makeGeoJSON(allGroups);
-          uploadToS3(geoJSON);
+          // const geoJSON = makeGeoJSON(allGroups);
+          // uploadToS3(geoJSON);
         }
       }
     })
