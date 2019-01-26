@@ -10,7 +10,9 @@
     "test": "jest -i --coverage --forceExit",
     "lint": "eslint --fix .",
     "start": "node index.js",
-    "pull": "node bin/pull-from-indivisible"
+    "pull": "node bin/pull-from-indivisible",
+    "pull-events": "node bin/pull-events-from-indivisible",
+    "pull-groups": "node bin/pull-groups-from-indivisible"
   },
   "repository": {
     "type": "git",
