@@ -9,6 +9,12 @@ has a value of 140251, display on map
 if custom field 109096 has a value get the email
 */
 class Group {
+  static formatUrl(url) {
+    if (!/(^https:\/\/)|(^http:\/\/)/.test(url)) {
+      return `https://${url}`;
+    }
+    return url;
+  }
   constructor(res) {
     const email = lodash.find(res.custom_fields, {custom_field_definition_id: 109096});
     const facebook = lodash.find(res.socials, { category: 'facebook' });
@@ -22,7 +28,7 @@ class Group {
     this.country = res.address ? res.address.country: null;
     this.name = res.name;
     this.id = res.id;
-    this.url = res.websites.length > 0 ? res.websites[0].url : null;
+    this.url = res.websites.length > 0 ? Group.formatUrl(res.websites[0].url) : null;
     this.details = res.details || null;
     this.socials = lodash.filter(res.socials, 'category') || null;
     this.interaction_count = res.interaction_count;
