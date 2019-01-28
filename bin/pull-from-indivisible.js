@@ -15,8 +15,8 @@ getEvents(townHallPath);
 let scotusActionsPath = '/rest/v1/event/?campaign=21';
 getEvents(scotusActionsPath);
 
-let maPath = '/rest/v1/event/?campaign=19';
-getEvents(maPath);
+// let maPath = '/rest/v1/event/?campaign=19';
+// getEvents(maPath);
 
 firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
