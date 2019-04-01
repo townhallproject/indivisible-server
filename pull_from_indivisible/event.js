@@ -18,6 +18,11 @@ class IndEvent {
     this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
     this.eventType = IndEvent.upPackField(response.fields, 'event_type');
     this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') === 'No promoter equipped with this actionkit config.' ? null : IndEvent.upPackField(response.fields, 'group_name');
+    if (!this.actionGroupName) {
+      let eventGroupName = IndEvent.upPackField(response.fields, 'event_group_name');
+      let actionGroupName = IndEvent.upPackField(response.fields, 'action_group_name');
+      this.actionGroupName = eventGroupName || actionGroupName || null;
+    }
     this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
     this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring');
     this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
@@ -114,7 +119,7 @@ class IndEvent {
 
   checkCampaignAndRemove() {
     if (this.campaignNo === '19') {
-      console.log('ma campaign', this.id)
+      console.log('ma campaign', this.id);
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
