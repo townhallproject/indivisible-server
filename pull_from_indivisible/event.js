@@ -112,6 +112,15 @@ class IndEvent {
     }
   }
 
+  checkCampaignAndRemove() {
+    if (this.campaignNo === '19') {
+      console.log('ma campaign', this.id)
+      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      ref.set(null);
+      return ref.remove();
+    }
+  }
+
   checkPostalAndRemove() {
     if (this.postal === '20301' || this.postal === '00840') {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);

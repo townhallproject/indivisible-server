@@ -69,7 +69,7 @@ class Group {
   }
 
   locationHasBeenChanged(groupInFirebase){
-    let toCheck = ['city', 'state', 'zip'];
+    let toCheck = ['city', 'state', 'zip', 'name'];
     let changed = false;
     toCheck.forEach((ele) => {
       if (!groupInFirebase[ele] && this[ele]) {
@@ -153,7 +153,7 @@ class Group {
 
   static zeroPaddZip(zip) {
     let padding = '00000';
-    let toBePadded = zip.toString()
+    let toBePadded = zip.toString();
     return padding.slice(0, padding.length - toBePadded.length) + toBePadded;
   }
 
