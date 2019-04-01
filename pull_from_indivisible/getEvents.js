@@ -20,6 +20,11 @@ function getAllData(path) {
         if (!newEvent.issueFocus) {
           return;
         }
+        // if (newEvent.everyactionId) {
+        //   if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
+        //     return newEvent.removeOne('too far in future');
+        //   }
+        // }
         if (newEvent.isRecurring) {
           if (!recurringEvents[newEvent.mobilizeId]) {
             recurringEvents[newEvent.mobilizeId] = {

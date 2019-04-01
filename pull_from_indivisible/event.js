@@ -26,6 +26,7 @@ class IndEvent {
     this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
     this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring');
     this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
+    this.everyactionId = IndEvent.upPackField(response.fields, 'everyaction_eventid');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
@@ -94,7 +95,7 @@ class IndEvent {
   }
 
   checkDateAndRemove() {
-    if (moment(this.starts_at_utc).isBefore()) {
+    if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
