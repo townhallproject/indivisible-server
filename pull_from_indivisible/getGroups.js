@@ -96,8 +96,8 @@ function getAllData(pageNumber){
       else {
         console.log('got all groups', allGroups.length, count.notPublic);
         if (!testing) {
-          // const geoJSON = makeGeoJSON(allGroups);
-          // uploadToS3(geoJSON);
+          const geoJSON = makeGeoJSON(allGroups);
+          uploadToS3(geoJSON);
         }
       }
     })
