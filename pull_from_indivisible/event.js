@@ -11,16 +11,16 @@ class IndEvent {
     }
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
     const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
-
     this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
     this.displayAltLink = IndEvent.upPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
     this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
     this.eventType = IndEvent.upPackField(response.fields, 'event_type');
+    this.actionMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
     this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') === 'No promoter equipped with this actionkit config.' ? null : IndEvent.upPackField(response.fields, 'group_name');
     if (!this.actionGroupName) {
       let eventGroupName = IndEvent.upPackField(response.fields, 'event_group_name');
-      let actionGroupName = IndEvent.upPackField(response.fields, 'action_group_name');
+      let actionGroupName = IndEvent.upPackField(response.fields, 'group_name');
       this.actionGroupName = eventGroupName || actionGroupName || null;
     }
     this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
