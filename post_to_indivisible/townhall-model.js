@@ -72,8 +72,10 @@ class IndTownHall {
     this.event_public_description = this.event_public_description ? this.event_public_description: this.event_title;
     if (cur.iconFlag === 'campaign' && cur.chamber === 'nationwide') {
       this.action_meeting_type = '2020 Candidate Event';
+      this.action_event_issue_focus = '2020 Candidate Event';
     } else {
       this.action_meeting_type = cur.meetingType;
+      this.action_event_issue_focus = 'Town Hall';
     }
     if (cur.link) {
       this.action_link_to_event_information = cur.link;
@@ -149,6 +151,7 @@ class IndTownHall {
         zip: townHall.event_postal,
         is_approved: 'true',
         host_is_confirmed: 'true',
+        // event_issue_focus: townHall.event_issue_focus,
       })
       .then(res=> {
         console.log('res', res.body);
