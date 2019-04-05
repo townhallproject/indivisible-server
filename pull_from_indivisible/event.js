@@ -10,7 +10,7 @@ class IndEvent {
       }
     }
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
-    const townHall = lodash.filter(response.fields, { name: 'meeting_type' });
+    const townHallMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
     this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
     this.displayAltLink = IndEvent.upPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
@@ -31,8 +31,8 @@ class IndEvent {
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
       this.issueFocus = issueFocus[0].value;
-    } else if (townHall && townHall.length > 0) {
-      this.issueFocus = 'Town Hall';
+    } else if (townHallMeetingType && townHallMeetingType.length > 0) {
+      this.issueFocus = townHallMeetingType === '2020 Candidate Event' ? townHallMeetingType : 'Town Hall';
     } else {
       this.issueFocus = false;
     }
