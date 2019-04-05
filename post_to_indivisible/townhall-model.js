@@ -70,11 +70,10 @@ class IndTownHall {
     this.name = 'MoC';
     this.event_public_description = cur.eventName ? cur.eventName : cur.Notes;
     this.event_public_description = this.event_public_description ? this.event_public_description: this.event_title;
-    this.action_meeting_type = cur.meetingType;
-    if (cur.meetingType === 'Campaign Town Hall' && cur.chamber === 'nationwide') {
-      this.action_event_issue_focus = '2020 Candidate Event';
+    if (cur.iconFlag === 'campaign' && cur.chamber === 'nationwide') {
+      this.action_meeting_type = '2020 Candidate Event';
     } else {
-      this.action_event_issue_focus = 'Town Hall';
+      this.action_meeting_type = cur.meetingType;
     }
     if (cur.link) {
       this.action_link_to_event_information = cur.link;

@@ -28,6 +28,11 @@ module.exports = function setUpListener() {
         }
       } else {
         console.log('already added');
+        // let newTownHall = prepTownHall(townhall);
+        // if (newTownHall) {
+        //   console.log('updating', newTownHall.event_title, newTownHall.action_meeting_type);
+        //   newTownHall.updateEvent(townhall.eventId, idObj.indivisiblepath);
+        // }
       }
     });
   });
