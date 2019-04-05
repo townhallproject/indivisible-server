@@ -28,21 +28,33 @@ class IndTownHall {
     this.event_title;
     let prefix;
     let district;
-    if (cur.flagIcon === 'campaign'){
+    if (cur.flagIcon === 'campaign' || cur.meetingType === 'Campaign Town Hall') {
       prefix = '';
     } else if (cur.district && !cur.thp_id) {
       prefix = 'Rep.';
       district = `${cur.state}-${Number(cur.district)}`;
-    } else {
+    } else if (cur.chamber === 'upper') {
       prefix = 'Sen.';
       district = 'Senate';
-    }
-    if (cur.iconFlag === 'staff') {
-      this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + district + ')';
-    } else if (cur.meetingType === 'Other') {
-      this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ';
     } else {
-      this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ' + cur.meetingType;
+      prefix = '';
+    }
+    if (district) {
+      if (cur.iconFlag === 'staff') {
+        this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + district + ')';
+      } else if (cur.meetingType === 'Other') {
+        this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ';
+      } else {
+        this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ' + cur.meetingType;
+      }
+    } else {
+      if (cur.iconFlag === 'staff') {
+        this.event_title = 'Staff Office Hours: ' + cur.Member;
+      } else if (cur.meetingType === 'Other') {
+        this.event_title = prefix + ' ' + cur.Member;
+      } else {
+        this.event_title = prefix + ' ' + cur.Member + ' ' + cur.meetingType;
+      }
     }
 
     this.event_starts_at_date = moment(cur.dateObj).format('L');
