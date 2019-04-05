@@ -151,10 +151,9 @@ class IndTownHall {
         zip: townHall.event_postal,
         is_approved: 'true',
         host_is_confirmed: 'true',
-        // event_issue_focus: townHall.event_issue_focus,
       })
-      .then(res=> {
-        console.log('res', res.body);
+      .then(()=> {
+        console.log('updated successful');
       })
       .catch(err=> {
         console.log(err, path);
