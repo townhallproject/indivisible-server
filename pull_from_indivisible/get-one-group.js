@@ -20,8 +20,8 @@ function getOneGroup(id) {
   
     })
     .catch(e => {
-      if (e.message === 'getaddrinfo ENOTFOUND api.prosperworks.com api.prosperworks.com:443') {
-        return 'ENOTFOUND';
+      if (e.message === 'getaddrinfo ENOTFOUND api.prosperworks.com api.prosperworks.com:443' || e.message === 'Not Found') {
+        return 'Not Found';
       }
       return e.message;
     });

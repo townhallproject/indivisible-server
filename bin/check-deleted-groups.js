@@ -12,7 +12,7 @@ firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
     const requestOneGroupAndDeleteRemoved = () => {
       getOneGroup(id)
         .then((returned) => {
-          if (returned === 'ENOTFOUND') {
+          if (returned === 'Not Found') {
             console.log('removing', id);
             Group.remove();
           } else {
