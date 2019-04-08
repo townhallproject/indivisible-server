@@ -15,6 +15,12 @@ class Group {
     }
     return url;
   }
+
+  static remove(id) {
+    const ref = firebasedb.ref(`indivisible_groups/${id}`);
+    ref.remove();
+  }
+
   constructor(res) {
     const email = lodash.find(res.custom_fields, {custom_field_definition_id: 109096});
     const facebook = lodash.find(res.socials, { category: 'facebook' });
