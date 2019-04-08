@@ -2,9 +2,13 @@
 const firebasedb = require('../lib/setup-indivisible-firebase');
 const getOneGroup = require('../pull_from_indivisible/get-one-group');
 const Group = require('../pull_from_indivisible/group');
+const startingGroup = 12029911;
+const endingGroup = 31611321 - 5297;
+const startPoint = Math.floor(Math.random() * (endingGroup - startingGroup + 1) + startingGroup);
 
-firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
+firebasedb.ref('indivisible_groups').orderByKey().startAt(`${startPoint}`).limitToFirst(5297).once('value').then(snapshot => {
   let index = 0;
+  console.log(startPoint);
   snapshot.forEach((res) => {
     let group = res.val();
     let id = group.id;
@@ -15,8 +19,8 @@ firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
           if (returned === 'Not Found') {
             console.log('removing', id);
             Group.remove();
-          } else {
-            console.log(returned.id || returned);
+          } else if (!returned.id) {
+            console.log(`${index} ${returned}`);
           }
         });
     };
