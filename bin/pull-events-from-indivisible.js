@@ -14,6 +14,9 @@ getEvents(townHallPath);
 let scotusActionsPath = '/rest/v1/event/?campaign=21';
 getEvents(scotusActionsPath);
 
+let indivisible2020 = '/rest/v1/event/?campaign=24';
+getEvents(indivisible2020);
+
 firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
   indEvent.checkDateAndRemove();

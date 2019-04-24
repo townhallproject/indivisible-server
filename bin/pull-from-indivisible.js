@@ -6,6 +6,7 @@ const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
 const getGroups = require('../pull_from_indivisible/getGroups');
+
 let localEventsPath = '/rest/v1/event/?campaign=15';
 getEvents(localEventsPath);
 
@@ -14,6 +15,9 @@ getEvents(townHallPath);
 
 let scotusActionsPath = '/rest/v1/event/?campaign=21';
 getEvents(scotusActionsPath);
+
+let indivisible2020 = '/rest/v1/event/?campaign=24';
+getEvents(indivisible2020);
 
 // let maPath = '/rest/v1/event/?campaign=19';
 // getEvents(maPath);
