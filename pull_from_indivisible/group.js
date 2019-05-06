@@ -54,7 +54,7 @@ class Group {
   }
 
   dataHasBeenChanged(groupInFirebase) {
-    let toCheck = ['socials', 'url'];
+    let toCheck = ['socials', 'url', 'email'];
     let changed = false;
     
     toCheck.forEach((ele) => {

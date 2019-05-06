@@ -40,37 +40,42 @@ function getAllData(pageNumber){
         const localGroupSubtype = lodash.find(ele.custom_fields, {custom_field_definition_id: 109116});
         let newGroup = new Group(ele);
         if (localGroupSubtype.value === 140251) {
-          firebasedb.ref('indivisible_groups/' + newGroup.id).once('value')
-            .then(groupInFirebase => {
-              if (groupInFirebase.exists() &&
-              groupInFirebase.val().longitude &&
-              groupInFirebase.val().latitude &&
-              !newGroup.locationHasBeenChanged(groupInFirebase.val())) {
-                // still need to add to tileset
-                newGroup.longitude = groupInFirebase.val().longitude;
-                newGroup.latitude = groupInFirebase.val().latitude;
-                // check if website has changed
-                if (newGroup.dataHasBeenChanged(groupInFirebase.val())){
-                  newGroup.writeToFirebase();
-                }
-                allGroups.push(newGroup);
-              } else if (groupInFirebase.exists() && groupInFirebase.val().address_failed) {
-                console.log('already failed', newGroup.id);
-              } else {
-                newGroup.getLatLng()
-                  .then(() => {
-                    console.log('got lat lng');
-                    allGroups.push(newGroup);
-                    newGroup.writeToFirebase();
-                  })
-                  .catch((e) => {
-                    console.log('no lat lng for group:', e);
-                    count.noaddress ++;
-                    newGroup.address_failed = true;
-                    newGroup.writeToFirebase();
-                  });
+          Promise.all([firebasedb.ref('indivisible_groups/' + newGroup.id).once('value'),
+            firebasedb.ref(`indivisible_group_emails/${newGroup.id}`).once('value'),
+          ]).then((groupAndEmail) => {
+            
+            const groupInFirebase = groupAndEmail[0];
+            const groupInFirebaseValue = groupInFirebase.val();
+            if (groupInFirebase.exists() &&
+            groupInFirebaseValue.longitude &&
+            groupInFirebaseValue.latitude &&
+            !newGroup.locationHasBeenChanged(groupInFirebaseValue)) {
+              groupInFirebaseValue.email = groupAndEmail[1].val();
+              // still need to add to tileset
+              newGroup.longitude = groupInFirebaseValue.longitude;
+              newGroup.latitude = groupInFirebaseValue.latitude;
+              // check if website has changed
+              if (newGroup.dataHasBeenChanged(groupInFirebaseValue)) {
+                newGroup.writeToFirebase();
               }
-            });
+              allGroups.push(newGroup);
+            } else if (groupInFirebase.exists() && groupInFirebaseValue.address_failed) {
+              console.log('already failed', newGroup.id);
+            } else {
+              newGroup.getLatLng()
+                .then(() => {
+                  console.log('got lat lng');
+                  allGroups.push(newGroup);
+                  newGroup.writeToFirebase();
+                })
+                .catch((e) => {
+                  console.log('no lat lng for group:', e);
+                  count.noaddress ++;
+                  newGroup.address_failed = true;
+                  newGroup.writeToFirebase();
+                });
+            }
+          });
         } else {
           let ref = firebasedb.ref(`indivisible_groups/${newGroup.id}`);
           ref.once('value')
