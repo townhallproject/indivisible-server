@@ -19,6 +19,9 @@ getEvents(scotusActionsPath);
 let indivisible2020 = '/rest/v1/event/?campaign=24';
 getEvents(indivisible2020);
 
+let stopAbortionBans = '/rest/v1/event/?campaign=26';
+getEvents(stopAbortionBans);
+
 // let maPath = '/rest/v1/event/?campaign=19';
 // getEvents(maPath);
 
