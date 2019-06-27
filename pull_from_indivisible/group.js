@@ -158,6 +158,9 @@ class Group {
   }
 
   static zeroPaddZip(zip) {
+    if (!zip) {
+      return null;
+    }
     let padding = '00000';
     let toBePadded = zip.toString();
     return padding.slice(0, padding.length - toBePadded.length) + toBePadded;
