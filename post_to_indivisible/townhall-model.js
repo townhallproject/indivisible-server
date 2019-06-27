@@ -1,5 +1,6 @@
 const moment = require('moment');
 const request = require('superagent');
+const find = require('lodash').find;
 
 const firebasedb = require('../lib/setup-firebase');
 const errorReport = require('../lib/error-reporting');
@@ -127,9 +128,47 @@ class IndTownHall {
           });
       })
       .catch(err => {
-        console.log('er', err.error, eventID);
+        console.log('error posting to indivisible', err.response.error.text, eventID);
         let newerrorEmail = new errorReport(err, `Issue with posting to indivisible: ${eventID}`);
         return newerrorEmail.sendEmail();
+      });
+  }
+
+  getEventField(path, fieldName) {
+    const user = process.env.ACTION_KIT_USERNAME;
+    const password = process.env.ACTION_KIT_PASS;
+    // ex '/rest/v1/event/8328/'
+    const url = `https://act.indivisibleguide.com${path}`;
+    return request
+      .get(url)
+      .auth(user, password)
+      .then((res) => {
+        const response = res.body;
+        return response.fields.length ? find(response.fields, {name: fieldName}) : null;
+
+      })
+      .catch(err => {
+        console.log(err, path);
+      });
+  }
+
+  updateEventField(path, valueToChange) {
+    const townHall = this;
+    const user = process.env.ACTION_KIT_USERNAME;
+    const password = process.env.ACTION_KIT_PASS;
+    // ex '/rest/v1/event/8328/'
+    const url = `https://act.indivisibleguide.com${path}`;
+    return request
+      .put(url)
+      .auth(user, password)
+      .send({
+        value: townHall[valueToChange],
+      })
+      .then(() => {
+        console.log('updated field successful');
+      })
+      .catch(err => {
+        console.log(err, path);
       });
   }
 

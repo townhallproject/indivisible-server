@@ -28,11 +28,6 @@ module.exports = function setUpListener() {
         }
       } else {
         console.log('already added');
-        // let newTownHall = prepTownHall(townhall);
-        // if (newTownHall) {
-        //   console.log('updating', newTownHall.event_title, newTownHall.action_meeting_type);
-        //   newTownHall.updateEvent(townhall.eventId, idObj.indivisiblepath);
-        // }
       }
     });
   });
@@ -47,10 +42,28 @@ module.exports = function setUpListener() {
         return console.log('no path');
       }
       console.log('changed');
-      let newTownHall = prepTownHall(townhall);
-      if (newTownHall) {
-        console.log('updating', newTownHall.event_title);
-        newTownHall.updateEvent(townhall.eventId, idObj.indivisiblepath);
+      let changedTownHall = prepTownHall(townhall);
+      if (changedTownHall) {
+        console.log('updating copy in indiv database', changedTownHall.event_title);
+        changedTownHall.updateEvent(townhall.eventId, idObj.indivisiblepath);
+
+        // checking that the event fields are in sync. 
+        // Shouldn't be needed now that they are being correctly set on initial write. 
+        changedTownHall.getEventField(idObj.indivisiblepath, 'meeting_type')
+          .then((field) => {
+            if (field && field.value !== changedTownHall.action_meeting_type) {
+              console.log('updating meeting type field', field.value, field.resource_uri, changedTownHall.action_meeting_type);
+              changedTownHall.updateEventField(field.resource_uri, 'action_meeting_type');
+            }
+          });
+        changedTownHall.getEventField(idObj.indivisiblepath, 'event_issue_focus')
+          .then((field) => {
+            const fieldApiName = 'action_event_issue_focus';
+            if (field && field.value !== changedTownHall[fieldApiName]) {
+              console.log('updating issue focus field', field.value, field.resource_uri, changedTownHall[fieldApiName]);
+              changedTownHall.updateEventField(field.resource_uri, fieldApiName);
+            }
+          });
       }
     });
   });
