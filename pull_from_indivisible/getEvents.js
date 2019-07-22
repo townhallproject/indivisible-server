@@ -56,10 +56,8 @@ function getAllData(path) {
             })
             .catch(() => {
               console.log('request group name error', url, newEvent.creator, newEvent.id);
-              if (newEvent.actionGroupName || newEvent.actionHostName) {
-                console.log('still writing', newEvent.id);
-                return newEvent.writeToFirebase();
-              }
+              return newEvent.writeToFirebase();  
+              
             });
         } else {
           newEvent.writeToFirebase();
