@@ -1,6 +1,8 @@
 const moment = require('moment');
 const lodash = require('lodash');
+
 const firebasedb = require('../lib/setup-indivisible-firebase');
+const errorReport = require('../lib/error-reporting');
 
 class IndEvent {
   constructor(response) {
@@ -75,7 +77,12 @@ class IndEvent {
     let path = `indivisible_public_events/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
-    return firebaseref.update(updates);
+    return firebaseref.update(updates)
+      .catch((err) => {
+        console.log('cant write event');
+        let newErrorEmail = new errorReport(err, `Issue with pulling from indivisible: ${JSON.stringify(this)}`);
+        return newErrorEmail.sendEmail();
+      });
   }
 
   removeOne(reason){
