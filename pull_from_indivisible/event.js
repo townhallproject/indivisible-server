@@ -43,9 +43,6 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-    if (this.id == 144865) {
-      console.log('got it', 144865)
-    }
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');
       return;
@@ -73,9 +70,6 @@ class IndEvent {
     if (this.isVirtualEvent === 'Yes') {
       this.removeOne('virtual');
       return;
-    }
-    if (this.id == 144865) {
-      console.log('writing it', 144865)
     }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
@@ -105,8 +99,6 @@ class IndEvent {
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
-      console.log('removing old', this.id)
-
       return ref.remove();
     }
   }

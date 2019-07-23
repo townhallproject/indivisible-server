@@ -16,18 +16,9 @@ function getAllData(path) {
   return requestData(url + path)
     .then((response) => {
       response.body.objects.forEach((ele) => {
-        if (ele.id == 144865) {
-          console.log('GOT IT!!!')
-        }
         let newEvent = new IndEvent(ele);
-        if (newEvent.id == 144865) {
-          console.log('got it')
-        }
         if (!newEvent.issueFocus) {
           return;
-        }
-        if (newEvent.id == 144865) {
-          console.log('Still going')
         }
         // if (newEvent.everyactionId) {
         //   if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
