@@ -21,7 +21,7 @@ class IndEvent {
     this.actionMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
     this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') !== 'No promoter equipped with this actionkit config.' ? IndEvent.upPackField(response.fields, 'group_name'): null;
     this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
-    this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring');
+    this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring') === 'Yes';
     this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
     this.everyactionId = IndEvent.upPackField(response.fields, 'everyaction_eventid');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
