@@ -75,6 +75,7 @@ class IndTownHall {
       this.action_meeting_type = '2020 Candidate Event';
       this.action_event_issue_focus = '2020 Candidate Event';
     } else {
+      this.action_town_hall_in_person = cur.iconFlag === 'in-person';
       this.action_meeting_type = cur.meetingType;
       this.action_event_issue_focus = 'Town Hall';
     }

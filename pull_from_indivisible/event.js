@@ -12,7 +12,7 @@ class IndEvent {
       }
     }
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
-    const townHallMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
+    this.townHallMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
     this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
     this.displayAltLink = IndEvent.upPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
