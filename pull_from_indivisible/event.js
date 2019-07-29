@@ -28,8 +28,8 @@ class IndEvent {
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
       this.issueFocus = issueFocus[0].value;
-    } else if (townHallMeetingType && townHallMeetingType.length > 0) {
-      this.issueFocus = townHallMeetingType === '2020 Candidate Event' ? townHallMeetingType : 'Town Hall';
+    } else if (this.townHallMeetingType && this.townHallMeetingType.length > 0) {
+      this.issueFocus = this.townHallMeetingType === '2020 Candidate Event' ? this.townHallMeetingType : 'Town Hall';
     } else {
       this.issueFocus = false;
     }
