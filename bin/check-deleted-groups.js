@@ -20,7 +20,7 @@ firebasedb.ref('indivisible_groups').orderByKey().startAt(`${startPoint}`).limit
             console.log('removing', id);
             Group.remove();
           } else if (!returned.id) {
-            console.log(`${index} ${returned}`);
+            console.log(`Other server error when looking for group: ${index} ${returned}`);
           }
         });
     };
