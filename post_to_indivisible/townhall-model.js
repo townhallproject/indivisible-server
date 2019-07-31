@@ -113,13 +113,14 @@ class IndTownHall {
       .send(townHall)
       .then(res => {
         let path = res.body.event;
+        console.log('posted', path);
         firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
         firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
         return path;
       })
       .then(path => {
         const url = `https://act.indivisibleguide.com${path}`;
-        console.log(url);
+        console.log('updating is approved and host', url);
         return request
           .put(url)
           .auth(user, password)
