@@ -20,6 +20,9 @@ getEvents(indivisible2020);
 let impeachmentEvents = '/rest/v1/event/?campaign=27';
 getEvents(impeachmentEvents);
 
+let campaignEvents = '/rest/v1/event/?campaign=28';
+getEvents(campaignEvents);
+
 firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
   indEvent.checkDateAndRemove();
