@@ -26,6 +26,12 @@ function getAllData(path) {
           }
         }
 
+        if (newEvent.isRecurring) {
+          if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
+            return newEvent.removeOne('too far in future');
+          }
+        }
+
         if (newEvent.creator !== '/rest/v1/user/393393/') {
           //get group name
           requestData(url + newEvent.creator)
