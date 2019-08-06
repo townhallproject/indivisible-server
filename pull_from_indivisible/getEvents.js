@@ -20,31 +20,12 @@ function getAllData(path) {
         if (!newEvent.issueFocus) {
           return;
         }
-        // if (newEvent.everyactionId) {
-        //   if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
-        //     return newEvent.removeOne('too far in future');
-        //   }
-        // }
-        if (newEvent.isRecurring) {
-          if (!recurringEvents[newEvent.mobilizeId]) {
-            recurringEvents[newEvent.mobilizeId] = {
-              id: newEvent.id,
-              starts_at: newEvent.starts_at,
-            };
-          } else {
-            let currentSoonest = recurringEvents[newEvent.mobilizeId];
-            if (moment(newEvent.starts_at).isBefore(currentSoonest.starts_at)) {
-              recurringEvents[newEvent.mobilizeId] = {
-                id: newEvent.id,
-                starts_at: newEvent.starts_at,
-              };
-              let toRemove = new IndEvent(currentSoonest);
-              toRemove.removeOne('found earlier recurring event');
-            } else {
-              return newEvent.removeOne('recurring');
-            }
+        if (newEvent.everyactionId) {
+          if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
+            return newEvent.removeOne('too far in future');
           }
         }
+
         if (newEvent.creator !== '/rest/v1/user/393393/') {
           //get group name
           requestData(url + newEvent.creator)
@@ -60,6 +41,9 @@ function getAllData(path) {
               
             });
         } else {
+          if (newEvent.id == 145055) {
+            console.log('writing it', 145055)
+          }
           newEvent.writeToFirebase();
         }
       });
