@@ -69,11 +69,15 @@ class IndTownHall {
     this.event_postal = zip;
     this.email = 'field@indivisibleguide.com';
     this.name = 'MoC';
+    this.campaign = '/rest/v1/campaign/9/';
+    this.page = 'register-event-recess_townhalls';
     this.event_public_description = cur.eventName ? cur.eventName : cur.Notes;
     this.event_public_description = this.event_public_description ? this.event_public_description: this.event_title;
     if (cur.iconFlag === 'campaign' && cur.chamber === 'nationwide') {
       this.action_meeting_type = '2020 Candidate Event';
       this.action_event_issue_focus = '2020 Candidate Event';
+      this.campaign = '/rest/v1/campaign/28/';
+      this.page = '2020-candidate-events';
     } else {
       this.action_town_hall_in_person = cur.iconFlag === 'in-person';
       this.action_meeting_type = cur.meetingType;
@@ -84,8 +88,6 @@ class IndTownHall {
     } else {
       this.action_link_to_event_information = 'https://townhallproject.com/?eventId=' + cur.eventId;
     }
-    this.page = 'register-event-recess_townhalls';
-    this.campaign = '/rest/v1/campaign/9/';
   }
 
   displayDistrict(cur){
