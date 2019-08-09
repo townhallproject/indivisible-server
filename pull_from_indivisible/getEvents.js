@@ -10,8 +10,6 @@ function requestData(url) {
     .auth(process.env.ACTION_KIT_USERNAME, process.env.ACTION_KIT_PASS);
 }
 
-const recurringEvents = {};
-
 function getAllData(path) {
   return requestData(url + path)
     .then((response) => {
