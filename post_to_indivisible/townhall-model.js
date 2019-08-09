@@ -72,6 +72,7 @@ class IndTownHall {
     this.campaign = '/rest/v1/campaign/9/';
     this.page = 'register-event-recess_townhalls';
     this.event_public_description = cur.eventName ? cur.eventName : cur.Notes;
+    this.action_thp_id = cur.eventId;
     this.event_public_description = this.event_public_description ? this.event_public_description: this.event_title;
     if (cur.iconFlag === 'campaign' && cur.chamber === 'nationwide') {
       this.action_meeting_type = '2020 Candidate Event';
@@ -116,8 +117,8 @@ class IndTownHall {
       .then(res => {
         let path = res.body.event;
         console.log('posted', path);
-        firebasedb.ref(`townHallIds/${eventID}`).update({indivisiblepath : path});
-        firebasedb.ref(`townHalls/${eventID}`).update({indivisiblepath : path});
+        firebasedb.ref(`townHallIds/${eventID}`).update({ indivisiblepath : path });
+        firebasedb.ref(`townHalls/${eventID}`).update({ indivisiblepath : path });
         return path;
       })
       .then(path => {
