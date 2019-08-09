@@ -2,6 +2,7 @@ const moment = require('moment');
 
 const firebasedb = require('../lib/setup-firebase');
 const IndTownHall = require('./townhall-model');
+const production = process.env.NODE_ENV === 'production';
 
 function prepTownHall(townhall) {
   if ((!townhall.repeatingEvent) && (townhall.meetingType !== 'Tele-Town Hall') && (moment(townhall.dateObj).isAfter()) && (townhall.meetingType !=='Tele-town Hall')) {
@@ -23,7 +24,7 @@ module.exports = function setUpListener() {
       }
       if (!idObj.indivisiblepath) {
         let newTownHall = prepTownHall(townhall);
-        if (newTownHall) {
+        if (newTownHall && production) {
           newTownHall.submitEvent(townhall.eventId);
         }
       } else {
@@ -43,7 +44,7 @@ module.exports = function setUpListener() {
       }
       console.log('changed');
       let changedTownHall = prepTownHall(townhall);
-      if (changedTownHall) {
+      if (changedTownHall && production) {
         console.log('updating copy in indiv database', changedTownHall.event_title);
         changedTownHall.updateEvent(townhall.eventId, idObj.indivisiblepath);
 
