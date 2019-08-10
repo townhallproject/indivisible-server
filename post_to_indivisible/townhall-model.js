@@ -58,7 +58,7 @@ class IndTownHall {
       }
     }
 
-    this.event_starts_at_date = moment(cur.dateObj).format('L');
+    this.event_starts_at_date = moment(cur.dateString, 'ddd, MMMM D YYYY').format('L');
     this.event_starts_at_time = cur.Time.split(' ')[0];
     this.event_starts_at_ampm = cur.Time.split(' ')[1].toLowerCase();
     this.event_venue = this.getVenue(cur);
@@ -181,6 +181,7 @@ class IndTownHall {
     let townHall = this;
     const user = process.env.ACTION_KIT_USERNAME;
     const password = process.env.ACTION_KIT_PASS;
+    const time = moment(`${townHall.event_starts_at_date} ${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`, 'H:m A').format('HH:mm:ss');
     // ex '/rest/v1/event/8328/'
     const url = `https://act.indivisibleguide.com${path}`;
     return request
@@ -188,6 +189,7 @@ class IndTownHall {
       .auth(user, password)
       .send({
         address1: townHall.event_address1,
+        starts_at: `${townHall.event_starts_at_date} ${time}`,
         city: townHall.event_city,
         title: townHall.event_title,
         venue: townHall.event_venue,
