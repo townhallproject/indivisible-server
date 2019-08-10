@@ -203,26 +203,26 @@ class IndTownHall {
         console.log(err, path);
       });
   }
-  
-  cancelEvent(path) {
-    const user = process.env.ACTION_KIT_USERNAME;
-    const password = process.env.ACTION_KIT_PASS;
-    // ex '/rest/v1/event/8328/'
-    const url = `https://act.indivisibleguide.com${path}`;
-    console.log(url);
-    return request
-      .put(url)
-      .auth(user, password)
-      .send({
-        status: 'cancelled',
-      })
-      .then(res => {
-        console.log('cancelled', res.body);
-      })
-      .catch(err => {
-        console.log(err, path);
-      });
-  }
 }
+
+IndTownHall.cancelEvent = (path) => {
+  const user = process.env.ACTION_KIT_USERNAME;
+  const password = process.env.ACTION_KIT_PASS;
+  // ex '/rest/v1/event/8328/'
+  const url = `https://act.indivisibleguide.com${path}`;
+  console.log(url);
+  return request
+    .put(url)
+    .auth(user, password)
+    .send({
+      status: 'cancelled',
+    })
+    .then(res => {
+      console.log('cancelled', res.body);
+    })
+    .catch(err => {
+      console.log(err, path);
+    });
+};
 
 module.exports = IndTownHall;
