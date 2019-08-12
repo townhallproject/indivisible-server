@@ -181,8 +181,8 @@ class IndTownHall {
     let townHall = this;
     const user = process.env.ACTION_KIT_USERNAME;
     const password = process.env.ACTION_KIT_PASS;
-    const time = moment(`${townHall.event_starts_at_date} ${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`, 'H:m A').format('HH:mm:ss');
-    console.log('moment', time, 'original' `${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`);
+    const time = moment(`${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`, 'H:mm a').format('kk:mm:ss');
+    console.log('moment', time, 'original', `${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`);
     // ex '/rest/v1/event/8328/'
     const url = `https://act.indivisibleguide.com${path}`;
     return request
