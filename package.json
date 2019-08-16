@@ -12,6 +12,7 @@
     "start": "node index.js",
     "pull": "node bin/pull-from-indivisible",
     "clear-groups": "node bin/check-deleted-groups",
+    "clear-events": "node post_to_indivisible/delete-events.js",
     "pull-events": "node bin/pull-events-from-indivisible",
     "pull-groups": "node bin/pull-groups-from-indivisible"
   },
