@@ -45,9 +45,6 @@ function getAllData(path) {
               
             });
         } else {
-          if (newEvent.id == 145055) {
-            console.log('writing it', 145055)
-          }
           newEvent.writeToFirebase();
         }
       });
