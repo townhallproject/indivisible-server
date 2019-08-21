@@ -2,26 +2,24 @@
 
 const firebasedb = require('../lib/setup-indivisible-firebase');
 
+const errorReport = require('../lib/error-reporting');
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
-let localEventsPath = '/rest/v1/event/?_offset=1820&_limit=20&campaign=15';
-getEvents(localEventsPath);
+const urlTemplate = (campaign) => `/rest/v1/event/?campaign=${campaign}&is_private=false&status=active&host_is_confirmed=true`;
 
-let townHallPath = '/rest/v1/event/?campaign=9';
-getEvents(townHallPath);
-
-let scotusActionsPath = '/rest/v1/event/?campaign=21';
-getEvents(scotusActionsPath);
-
-let indivisible2020 = '/rest/v1/event/?campaign=24';
-getEvents(indivisible2020);
-
-let impeachmentEvents = '/rest/v1/event/?campaign=27';
-getEvents(impeachmentEvents);
-
-let campaignEvents = '/rest/v1/event/?campaign=28';
-getEvents(campaignEvents);
+const campaigns = [15, 9, 21, 24, 27, 28];
+const urls = campaigns.map((number) => urlTemplate(number));
+Promise.all(urls.map(url => getEvents(url) ))
+  .then((returned) => {
+    returned.forEach((ret) => {
+      console.log(ret);
+    });
+    process.exit(0);
+  }).catch((error) => {
+    let newerrorEmail = new errorReport(error, 'Issue with getting events from indivisible}');
+    return newerrorEmail.sendEmail();
+  });
 
 firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
