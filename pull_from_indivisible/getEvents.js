@@ -58,7 +58,11 @@ function getAllData(path) {
         }
         return getAllData(res.next);
       }
-      return console.log('got all events');
+      return Promise.resolve({
+            message: 'got all events',
+            previous: res.previous,
+            total: res.total_count,
+          });
     })
     .catch((err) => console.log('getAllData error', path, err));
 }
