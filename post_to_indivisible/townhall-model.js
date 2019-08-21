@@ -228,4 +228,20 @@ IndTownHall.cancelEvent = (path) => {
     });
 };
 
+IndTownHall.getEvent = (path) => {
+  const user = process.env.ACTION_KIT_USERNAME;
+  const password = process.env.ACTION_KIT_PASS;
+  // ex '/rest/v1/event/8328/'
+  const url = `https://act.indivisibleguide.com${path}`;
+  return request
+    .get(url)
+    .auth(user, password)
+    .then(res => {
+      return res.body;
+    })
+    .catch(err => {
+      console.log(err, path);
+    });
+};
+
 module.exports = IndTownHall;
