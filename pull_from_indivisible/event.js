@@ -24,6 +24,7 @@ class IndEvent {
     this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring') === 'Yes';
     this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
     this.everyactionId = IndEvent.upPackField(response.fields, 'everyaction_eventid');
+    this.thpId = IndEvent.upPackField(response.fields, 'thp_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
