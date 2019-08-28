@@ -6,7 +6,7 @@ const errorReport = require('../lib/error-reporting');
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
-const urlTemplate = (campaign) => `/rest/v1/event/?campaign=${campaign}&is_private=false&status=active&host_is_confirmed=true`;
+const urlTemplate = (campaign) => `/rest/v1/event/?campaign=${campaign}`;
 
 const campaigns = [15, 9, 21, 24, 27, 28];
 const urls = campaigns.map((number) => urlTemplate(number));
