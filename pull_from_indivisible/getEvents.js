@@ -18,12 +18,6 @@ function getAllData(path) {
         if (!newEvent.issueFocus) {
           return;
         }
-        if (newEvent.everyactionId) {
-          if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
-            return newEvent.removeOne('too far in future');
-          }
-        }
-
         if (newEvent.isRecurring) {
           if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
             return newEvent.removeOne('too far in future');
@@ -59,10 +53,10 @@ function getAllData(path) {
         return getAllData(res.next);
       }
       return Promise.resolve({
-            message: 'got all events',
-            previous: res.previous,
-            total: res.total_count,
-          });
+        message: 'got all events',
+        previous: res.previous,
+        total: res.total_count,
+      });
     })
     .catch((err) => console.log('getAllData error', path, err));
 }
