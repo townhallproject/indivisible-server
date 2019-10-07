@@ -4,6 +4,13 @@ const find = require('lodash').find;
 
 const firebasedb = require('../lib/setup-firebase');
 const errorReport = require('../lib/error-reporting');
+const production = process.env.NODE_ENV === 'production';
+
+function getZip(address) {
+  const zipCodeRegEx = /(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
+
+  return address.match(zipCodeRegEx) ? address.match(zipCodeRegEx)[0] : '';
+}
 
 class IndTownHall {
   constructor(cur) {
@@ -17,14 +24,20 @@ class IndTownHall {
       return; 
     }
     if (cur.address) {
+      
       let addList = cur.address.split(', ');
       if (addList[addList.length - 1] === 'United States') {
         addList.splice(addList.length - 1);
       }
-      zip = addList[addList.length - 1].split(' ')[1] || '';
-      city = addList[addList.length - 2] || '';
-      addList.splice(addList.length - 2, 2);
-      address = addList.join(', ');
+      zip = getZip(cur.address);
+      if (addList.length === 2) {
+        city = addList[0];
+        address = addList[0];
+      } else {
+        city = addList[addList.length - 2] || '';
+        addList.splice(addList.length - 2, 2);
+        address = addList.join(', ');
+      }
     }
     this.event_title;
     let prefix;
@@ -110,6 +123,9 @@ class IndTownHall {
     const user = process.env.ACTION_KIT_USERNAME;
     const password = process.env.ACTION_KIT_PASS;
     const url = 'https://act.indivisibleguide.com/rest/v1/action/';
+    if (!production) {
+      return Promise.resolve();
+    }
     return request
       .post(url)
       .auth(user, password)
@@ -163,6 +179,9 @@ class IndTownHall {
     const password = process.env.ACTION_KIT_PASS;
     // ex '/rest/v1/event/8328/'
     const url = `https://act.indivisibleguide.com${path}`;
+    if (!production) {
+      return Promise.resolve();
+    }
     return request
       .put(url)
       .auth(user, password)
@@ -185,6 +204,9 @@ class IndTownHall {
     console.log('moment', time, 'original', `${townHall.event_starts_at_time} ${townHall.event_starts_at_ampm}`);
     // ex '/rest/v1/event/8328/'
     const url = `https://act.indivisibleguide.com${path}`;
+    if (!production) {
+      return Promise.resolve();
+    }
     return request
       .put(url)
       .auth(user, password)
@@ -214,6 +236,9 @@ IndTownHall.cancelEvent = (path) => {
   // ex '/rest/v1/event/8328/'
   const url = `https://act.indivisibleguide.com${path}`;
   console.log(url);
+  if (!production) {
+    return Promise.resolve();
+  }
   return request
     .put(url)
     .auth(user, password)
