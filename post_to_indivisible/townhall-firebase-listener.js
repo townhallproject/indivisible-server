@@ -11,7 +11,8 @@ function prepTownHall(townhall) {
     (townhall.meetingType !== 'Tele-Town Hall') && 
     (moment(townhall.dateObj).isAfter()) && 
     (townhall.meetingType !=='Tele-town Hall') && 
-    townhall.iconFlag !== 'staff') {
+    townhall.iconFlag !== 'staff' && 
+    townhall.meetingType !== 'Office Hours') {
     let newTownHall = new IndTownHall(townhall);
     if (newTownHall.event_address1 && newTownHall.event_postal) {
       return newTownHall;
