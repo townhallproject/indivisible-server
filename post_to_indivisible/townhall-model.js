@@ -55,19 +55,19 @@ class IndTownHall {
     }
     if (district) {
       if (cur.iconFlag === 'staff') {
-        this.event_title = 'Staff Office Hours: ' + cur.Member + ' (' + district + ')';
+        this.event_title = 'Staff Office Hours: ' + cur.displayName + ' (' + district + ')';
       } else if (cur.meetingType === 'Other') {
-        this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ';
+        this.event_title = prefix + ' ' + cur.displayName + ' (' + district + ') ';
       } else {
-        this.event_title = prefix + ' ' + cur.Member + ' (' + district + ') ' + cur.meetingType;
+        this.event_title = prefix + ' ' + cur.displayName + ' (' + district + ') ' + cur.meetingType;
       }
     } else {
       if (cur.iconFlag === 'staff') {
-        this.event_title = 'Staff Office Hours: ' + cur.Member;
+        this.event_title = 'Staff Office Hours: ' + cur.displayName;
       } else if (cur.meetingType === 'Other') {
-        this.event_title = prefix + ' ' + cur.Member;
+        this.event_title = prefix + ' ' + cur.displayName;
       } else {
-        this.event_title = prefix + ' ' + cur.Member + ' ' + cur.meetingType;
+        this.event_title = prefix + ' ' + cur.displayName + ' ' + cur.meetingType;
       }
     }
 
