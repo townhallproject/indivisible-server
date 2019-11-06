@@ -7,12 +7,16 @@ const errorReport = require('../lib/error-reporting');
 const production = process.env.NODE_ENV === 'production';
 
 function prepTownHall(townhall) {
-  if ((!townhall.repeatingEvent) && (townhall.meetingType !== 'Tele-Town Hall') && (moment(townhall.dateObj).isAfter()) && (townhall.meetingType !=='Tele-town Hall')) {
+  if ((!townhall.repeatingEvent) && 
+    (townhall.meetingType !== 'Tele-Town Hall') && 
+    (moment(townhall.dateObj).isAfter()) && 
+    (townhall.meetingType !=='Tele-town Hall') && 
+    townhall.iconFlag !== 'staff') {
     let newTownHall = new IndTownHall(townhall);
     if (newTownHall.event_address1 && newTownHall.event_postal) {
       return newTownHall;
     }
-    console.log('no address info', newTownHall.action_thp_id)
+    console.log('no address info', newTownHall.action_thp_id);
     let newerrorEmail = new errorReport(`No zipcode or address: ${newTownHall.action_thp_id}`, `error posting: ${newTownHall.action_thp_id}`);
     newerrorEmail.sendEmail();
     return null;
