@@ -8,15 +8,15 @@ const production = process.env.NODE_ENV === 'production';
 
 function getZip(address) {
   const zipCodeRegEx = /(\d{5}-\d{4}|\d{5}|\d{9})$|^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/g;
-
+  
   return address.match(zipCodeRegEx) ? address.match(zipCodeRegEx)[0] : '';
 }
 
 class IndTownHall {
   constructor(cur) {
-    let address,
-      zip,
-      city;
+    let address = '',
+      zip = '',
+      city = '';
     if (cur.issueFocus) {
       for (let key in cur) {
         this[key] = cur[key];
@@ -30,6 +30,9 @@ class IndTownHall {
         addList.splice(addList.length - 1);
       }
       zip = getZip(cur.address);
+      if(cur.meetingType === 'Tele-Town Hall') {
+        console.log(zip, cur.address);
+      }
       if (addList.length === 2) {
         city = addList[0];
         address = addList[0];
@@ -80,6 +83,7 @@ class IndTownHall {
     this.event_host_requirements = '1';
     this.event_city = city;
     this.event_postal = zip;
+    this.event_phone = cur.phoneNumber || '';
     this.email = 'field@indivisibleguide.com';
     this.name = 'MoC';
     this.campaign = '/rest/v1/campaign/9/';
@@ -114,6 +118,8 @@ class IndTownHall {
   getVenue(cur){
     if (cur.Location) {
       return cur.Location;
+    } if (cur.meetingType === 'Tele-Town Hall') {
+      return 'Tele conference';
     }
     return 'Address below:';
   }

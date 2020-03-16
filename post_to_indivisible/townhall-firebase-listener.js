@@ -8,9 +8,7 @@ const production = process.env.NODE_ENV === 'production';
 
 function prepTownHall(townhall) {
   if ((!townhall.repeatingEvent) && 
-    (townhall.meetingType !== 'Tele-Town Hall') && 
     (moment(townhall.dateObj).isAfter()) && 
-    (townhall.meetingType !=='Tele-town Hall') && 
     townhall.iconFlag !== 'staff' && 
     townhall.meetingType !== 'Office Hours') {
     let newTownHall = new IndTownHall(townhall);
