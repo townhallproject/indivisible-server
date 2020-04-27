@@ -9,7 +9,7 @@ const uploadToMapbox = (url) => {
     url: url,
     name: 'group-dataset',
   };
-  superagent
+  return superagent
     .post(`${mapboxapi}/${process.env.MAPBOX_USERNAME}?access_token=${process.env.MAPBOX_ACCESS_TOKEN}`)
     .send(data)
     .then((res) => {
@@ -21,7 +21,7 @@ const uploadToMapbox = (url) => {
 };
 
 module.exports = (geoJSON) => {
-  superagent
+  return superagent
     .post(`${mapboxapi}/${process.env.MAPBOX_USERNAME}/credentials?access_token=${process.env.MAPBOX_ACCESS_TOKEN}`)
     .then(res => {
       const credentials = res.body;
