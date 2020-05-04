@@ -25,6 +25,7 @@ class Group {
     const email = lodash.find(res.custom_fields, {custom_field_definition_id: 109096});
     const facebook = lodash.find(res.socials, { category: 'facebook' });
     const twitter = lodash.find(res.socials, { category: 'twitter' });
+    this.active = res.tags.includes('active');
     this.facebook = facebook ? facebook.url: null;
     this.twitter = twitter ? twitter.url: null;
     this.email = email ? email.value : null;
