@@ -16,12 +16,7 @@ ref.once('value')
       index++;
 
       const requestOneGroupAndDeleteRemoved = (id) => {
-        if (id == 12031594) {
-          console.log('found 12031594');
-        }
-        if (id == 12030566) {
-          console.log('found 12030566');
-        }
+
         getOneGroup(id)
           .then((returned) => {
             if (returned === 'Not Found') {
