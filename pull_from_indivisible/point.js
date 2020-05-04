@@ -13,6 +13,7 @@ class Point {
       twitter: group.twitter || false,
       facebook: group.facebook || false,
       title: group.title || group.name,
+      active: group.active,
       id: group.id || false,
     };
   }
