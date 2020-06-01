@@ -8,6 +8,41 @@ has a value of 140251, display on map
 
 if custom field 109096 has a value get the email
 */
+
+const GROUP_STATUS_OPTIONS = [{
+  'id': 140251,
+  'name': 'Public (displayed in map)',
+  'rank': 0,
+}, {
+  'id': 140250,
+  'name': 'New (Needs Processing)',
+  'rank': 4,
+}, {
+  'id': 140252,
+  'name': 'Private (not on map)',
+  'rank': 1,
+}, {
+  'id': 140254,
+  'name': 'National',
+  'rank': 5,
+}, {
+  'id': 140766,
+  'name': 'Not following principles',
+  'rank': 3,
+}, {
+  'id': 140764,
+  'name': 'International',
+  'rank': 6,
+}, {
+  'id': 141434,
+  'name': 'Inactive',
+  'rank': 2,
+}, {
+  'id': 678403,
+  'name': 'Verified (displayed on map)',
+  'rank': 7,
+}];
+
 class Group {
   static formatUrl(url) {
     if (!/(^https:\/\/)|(^http:\/\/)/.test(url)) {
@@ -21,11 +56,21 @@ class Group {
     ref.remove();
   }
 
+
+
   constructor(res) {
     const email = lodash.find(res.custom_fields, {custom_field_definition_id: 109096});
     const facebook = lodash.find(res.socials, { category: 'facebook' });
     const twitter = lodash.find(res.socials, { category: 'twitter' });
-    this.active = res.tags.includes('active');
+    const groupStatus = lodash.find(res.custom_fields, {
+      custom_field_definition_id: 109116,
+    });
+    this.active = groupStatus.value === 678403;
+    const groupStatusName = lodash.find(GROUP_STATUS_OPTIONS, {
+      id: groupStatus.value,
+    });
+    this.status = groupStatusName ? groupStatusName.name : '';
+
     this.facebook = facebook ? facebook.url: null;
     this.twitter = twitter ? twitter.url: null;
     this.email = email ? email.value : null;
