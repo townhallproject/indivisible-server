@@ -4,6 +4,7 @@ const lodash = require('lodash');
 const firebasedb = require('../lib/setup-indivisible-firebase');
 const errorReport = require('../lib/error-reporting');
 
+const staging = !!process.env.STAGING_DATABASE;
 class IndEvent {
   constructor(response) {
     for (var key in response) {
@@ -53,7 +54,8 @@ class IndEvent {
       this.removeOne('not not confirmed');
       return;
     }
-    if (this.status !== 'active' || this.status !== 'new') {
+    if (this.status !== 'active' || this.status !== 'new' || (this.status === 'staging' && !staging)) {
+      console.log('status', this.status, staging);
       this.removeOne('not active/new');
       return;
     }
