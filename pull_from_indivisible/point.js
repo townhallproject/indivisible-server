@@ -13,7 +13,7 @@ class Point {
       twitter: group.twitter || false,
       facebook: group.facebook || false,
       title: group.title || group.name,
-      status: group.status || null,
+      status: group.status || 'none',
       id: group.id || false,
     };
   }
