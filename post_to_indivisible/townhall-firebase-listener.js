@@ -5,6 +5,7 @@ const IndTownHall = require('./townhall-model');
 const errorReport = require('../lib/error-reporting');
 
 const production = process.env.NODE_ENV === 'production';
+const staging = !!process.env.STAGING_DATABASE;
 
 function prepTownHall(townhall) {
   if ((!townhall.repeatingEvent) && 
@@ -23,6 +24,10 @@ function prepTownHall(townhall) {
 }
 
 module.exports = function setUpListener() {
+  if (staging) {
+    console.log('STAGING database, no need to set up listener for townhall project');
+    return;
+  }
   firebasedb.ref('townHalls/').on('child_added', function(snapshot){
     var townhall = snapshot.val();
     firebasedb.ref(`townHallIds/${townhall.eventId}`).once('value').then(function(ele){
