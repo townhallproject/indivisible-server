@@ -46,11 +46,20 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
+    if (this.id == 156570) {
+      console.log('trying to write 156570');
+    }
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
+      if (this.id == 156570) {
+        console.log('trying to write 156570, in past');
+      }
       this.removeOne('is in past');
       return;
     }
     if (!this.host_is_confirmed){
+      if (this.id == 156570) {
+        console.log('trying to write 156570, not confirmed');
+      }
       this.removeOne('not not confirmed');
       return;
     }
@@ -60,18 +69,30 @@ class IndEvent {
       return;
     }
     if (this.is_private) {
+      if (this.id == 156570) {
+        console.log('trying to write 156570, is private');
+      }
       this.removeOne('is private');
       return;
     }
     if (this.postal == '20301' || this.postal === '00840') {
+      if (this.id == 156570) {
+        console.log('trying to write 156570, wrong zipcode');
+      }
       this.removeOne('zip', this.postal);
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
+      if (this.id == 156570) {
+        console.log('trying to write 156570, virtual');
+      }
       this.removeOne('virtual');
       return;
     }
     if (this.isVirtualEvent === 'Yes') {
+      if (this.id == 156570) {
+        console.log('trying to write 156570, virtual');
+      }
       this.removeOne('virtual');
       return;
     }
@@ -110,7 +131,7 @@ class IndEvent {
   checkStatusAndRemove() {
     if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-      console.log('not the right status', this.id)
+      console.log('not the right status', this.id);
       ref.set(null);
       return ref.remove();
     }
@@ -119,7 +140,7 @@ class IndEvent {
   checkPublicAndRemove() {
     if (this.is_private) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-      console.log('not public', this.id)
+      console.log('not public', this.id);
       ref.set(null);
       return ref.remove();
     }
@@ -138,7 +159,7 @@ class IndEvent {
   checkPostalAndRemove() {
     if (this.postal === '20301' || this.postal === '00840') {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-      console.log('wrong postal code', this.id)
+      console.log('wrong postal code', this.id);
       ref.set(null);
       return ref.remove();
     }
