@@ -3,6 +3,7 @@ const moment = require('moment');
 const url = 'https://indivisible.actionkit.com';
 const testing = process.env.NODE_ENV !== 'production';
 const IndEvent = require('./event');
+const staging = !!process.env.STAGING_DATABASE;
 
 function requestData(url) {
   return superagent
@@ -47,7 +48,7 @@ function getAllData(path) {
     })
     .then((res) => {
       if (res.next) {
-        if (testing) {
+        if (testing || staging) {
           console.log('next', res.next);
         }
         return getAllData(res.next);
