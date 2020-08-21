@@ -16,7 +16,13 @@ function getAllData(path) {
     .then((response) => {
       response.body.objects.forEach((ele) => {
         let newEvent = new IndEvent(ele);
+        if (newEvent.id == 156570 ) {
+          console.log('found 156570');
+        }
         if (!newEvent.issueFocus) {
+          if (staging) {
+            console.log('No issue focus', newEvent.id);
+          }
           return;
         }
         if (newEvent.isRecurring) {
