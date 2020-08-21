@@ -46,19 +46,19 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-    if (this.id == 156570) {
-      console.log('trying to write 156570');
+    if (this.id == 156715) {
+      console.log('trying to write 156715');
     }
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
-      if (this.id == 156570) {
-        console.log('trying to write 156570, in past');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, in past');
       }
       this.removeOne('is in past');
       return;
     }
     if (!this.host_is_confirmed){
-      if (this.id == 156570) {
-        console.log('trying to write 156570, not confirmed');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, not confirmed');
       }
       this.removeOne('not not confirmed');
       return;
@@ -69,29 +69,29 @@ class IndEvent {
       return;
     }
     if (this.is_private) {
-      if (this.id == 156570) {
-        console.log('trying to write 156570, is private');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, is private');
       }
       this.removeOne('is private');
       return;
     }
     if (this.postal == '20301' || this.postal === '00840') {
-      if (this.id == 156570) {
-        console.log('trying to write 156570, wrong zipcode');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, wrong zipcode');
       }
       this.removeOne('zip', this.postal);
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
-      if (this.id == 156570) {
-        console.log('trying to write 156570, virtual');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, virtual');
       }
       this.removeOne('virtual');
       return;
     }
     if (this.isVirtualEvent === 'Yes') {
-      if (this.id == 156570) {
-        console.log('trying to write 156570, virtual');
+      if (this.id == 156715) {
+        console.log('trying to write 156715, virtual');
       }
       this.removeOne('virtual');
       return;
