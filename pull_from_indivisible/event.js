@@ -110,6 +110,7 @@ class IndEvent {
   checkStatusAndRemove() {
     if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('not the right status', this.id)
       ref.set(null);
       return ref.remove();
     }
@@ -118,6 +119,7 @@ class IndEvent {
   checkPublicAndRemove() {
     if (this.is_private) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('not public', this.id)
       ref.set(null);
       return ref.remove();
     }
@@ -127,6 +129,7 @@ class IndEvent {
     if (this.campaignNo === '19') {
       console.log('ma campaign', this.id);
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('campaign 19', this.id);
       ref.set(null);
       return ref.remove();
     }
@@ -135,6 +138,7 @@ class IndEvent {
   checkPostalAndRemove() {
     if (this.postal === '20301' || this.postal === '00840') {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('wrong postal code', this.id)
       ref.set(null);
       return ref.remove();
     }
