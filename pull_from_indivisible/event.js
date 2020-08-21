@@ -54,7 +54,7 @@ class IndEvent {
       this.removeOne('not not confirmed');
       return;
     }
-    if (this.status !== 'active' || this.status !== 'new' || (this.status === 'staging' && !staging)) {
+    if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
       console.log('status', this.status, staging);
       this.removeOne('not active/new');
       return;
