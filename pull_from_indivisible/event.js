@@ -108,7 +108,7 @@ class IndEvent {
   }
 
   checkStatusAndRemove() {
-    if (this.status !== 'active' || this.status !== 'new' || (this.status === 'staging' && !staging)) {
+    if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       ref.set(null);
       return ref.remove();
