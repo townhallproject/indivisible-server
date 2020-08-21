@@ -48,7 +48,7 @@ function getAllData(path) {
     })
     .then((res) => {
       if (res.next) {
-        if (testing || staging) {
+        if (testing) {
           console.log('next', res.next);
         }
         return getAllData(res.next);
