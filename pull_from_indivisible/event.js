@@ -13,20 +13,22 @@ class IndEvent {
       }
     }
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
-    this.townHallMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
-    this.linkToInfo = IndEvent.upPackField(response.fields , 'link_to_event_information');
-    this.displayAltLink = IndEvent.upPackField(response.fields, 'display_alt_link') ? true: false;
+    this.townHallMeetingType = IndEvent.unPackField(response.fields, 'meeting_type');
+    this.linkToInfo = IndEvent.unPackField(response.fields , 'link_to_event_information');
+    this.displayAltLink = IndEvent.unPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
-    this.isVirtualEvent = IndEvent.upPackField(response.fields , 'is_virtual_event');
-    this.eventType = IndEvent.upPackField(response.fields, 'event_type');
-    this.actionMeetingType = IndEvent.upPackField(response.fields, 'meeting_type');
-    this.actionGroupName = IndEvent.upPackField(response.fields, 'group_name') !== 'No promoter equipped with this actionkit config.' ? IndEvent.upPackField(response.fields, 'group_name'): null;
-    this.actionHostName = IndEvent.upPackField(response.fields, 'host_name');
-    this.isRecurring = IndEvent.upPackField(response.fields, 'is_recurring') === 'Yes';
-    this.mobilizeId = IndEvent.upPackField(response.fields, 'mobilize_id');
-    this.everyactionId = IndEvent.upPackField(response.fields, 'everyaction_eventid');
-    this.isDigital = IndEvent.upPackField(response.fields, 'event_virtual_status') === 'digital';
-    this.thpId = IndEvent.upPackField(response.fields, 'thp_id');
+    this.isVirtualEvent = IndEvent.unPackField(response.fields, 'is_virtual_event');
+    this.virtualStatus = IndEvent.unPackField(response.fields, 'event_virtual_status');
+    this.eventType = IndEvent.unPackField(response.fields, 'event_type');
+    this.eventScale = IndEvent.unPackField(response.fields, 'event_scale');
+    this.actionMeetingType = IndEvent.unPackField(response.fields, 'meeting_type');
+    this.actionGroupName = IndEvent.unPackField(response.fields, 'group_name') !== 'No promoter equipped with this actionkit config.' ? IndEvent.unPackField(response.fields, 'group_name'): null;
+    this.actionHostName = IndEvent.unPackField(response.fields, 'host_name');
+    this.isRecurring = IndEvent.unPackField(response.fields, 'is_recurring') === 'Yes';
+    this.mobilizeId = IndEvent.unPackField(response.fields, 'mobilize_id');
+    this.everyactionId = IndEvent.unPackField(response.fields, 'everyaction_eventid');
+    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital';
+    this.thpId = IndEvent.unPackField(response.fields, 'thp_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
@@ -38,7 +40,7 @@ class IndEvent {
     }
   }
 
-  static upPackField(fields, fieldName) {
+  static unPackField(fields, fieldName) {
     const result = lodash.filter(fields, {
       name: fieldName,
     });
@@ -46,20 +48,12 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-    if (this.id == 156715) {
-      console.log('trying to write 156715');
-    }
+
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
-      if (this.id == 156715) {
-        console.log('trying to write 156715, in past');
-      }
       this.removeOne('is in past');
       return;
     }
     if (!this.host_is_confirmed){
-      if (this.id == 156715) {
-        console.log('trying to write 156715, not confirmed');
-      }
       this.removeOne('not not confirmed');
       return;
     }
@@ -69,30 +63,18 @@ class IndEvent {
       return;
     }
     if (this.is_private) {
-      if (this.id == 156715) {
-        console.log('trying to write 156715, is private');
-      }
       this.removeOne('is private');
       return;
     }
     if (this.postal == '20301' || this.postal === '00840') {
-      if (this.id == 156715) {
-        console.log('trying to write 156715, wrong zipcode');
-      }
       this.removeOne('zip', this.postal);
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
-      if (this.id == 156715) {
-        console.log('trying to write 156715, virtual');
-      }
       this.removeOne('virtual');
       return;
     }
     if (this.isVirtualEvent === 'Yes') {
-      if (this.id == 156715) {
-        console.log('trying to write 156715, virtual');
-      }
       this.removeOne('virtual');
       return;
     }
@@ -101,6 +83,8 @@ class IndEvent {
     let path = `indivisible_public_events/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
+    console.log(this.eventScale, this.virtualStatus)
+
     return firebaseref.update(updates)
       .catch((err) => {
         console.log('cant write event');
