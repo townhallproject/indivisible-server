@@ -5,6 +5,9 @@ const firebasedb = require('../lib/setup-indivisible-firebase');
 const errorReport = require('../lib/error-reporting');
 
 const staging = !!process.env.STAGING_DATABASE;
+
+const STATUSES_TO_INCLUDE = staging ? ['staging', 'active', 'new'] : ['active', 'new'];
+
 class IndEvent {
   constructor(response) {
     for (var key in response) {
@@ -57,8 +60,9 @@ class IndEvent {
       this.removeOne('not not confirmed');
       return;
     }
-    if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
-      console.log('status', this.status, staging);
+
+    if (!STATUSES_TO_INCLUDE.includes(this.status)) {
+      console.log('status failed', this.status, staging);
       this.removeOne('not active/new');
       return;
     }
@@ -83,7 +87,6 @@ class IndEvent {
     let path = `indivisible_public_events/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
-    console.log(this.eventScale, this.virtualStatus)
 
     return firebaseref.update(updates)
       .catch((err) => {
@@ -113,7 +116,7 @@ class IndEvent {
   }
 
   checkStatusAndRemove() {
-    if (this.status !== 'active' && this.status !== 'new' && (this.status === 'staging' && !staging)) {
+    if (!STATUSES_TO_INCLUDE.includes(this.status)) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
       console.log('not the right status', this.id);
       ref.set(null);
