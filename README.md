@@ -1,6 +1,17 @@
 # indivisible-server
 server responsible for the interface between THP and Indivisible 
 
+## Processes
+1. GET events from ActionKit API => firebase database 
+- staging backend pulls all event with `status === "new" | "active" | "staging"` and saves them in https://indivisible-testing-data.firebaseio.com
+- production backend pulls events with `status === "new" | "active"` and saves them in https://indivisible-data.firebaseio.com
+
+2. Convert town halls from THP firebase databse into ActionKit events and POST to API (will be included in pull from API)
+[Docs](https://docs.actionkit.com/docs/manual/api/rest/examples/addevent.html
+
+3. GET all active groups from Prosperworks and post them to firebase api, and Mapbox api
+
+## Troubleshooting
 ### Why isn't this actionkit event showing up on the map?
 
 1. It doesn't have an issue focus
