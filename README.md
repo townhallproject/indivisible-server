@@ -25,7 +25,7 @@ server responsible for the interface between THP and Indivisible
 3. It is in the past
 4. The host is not confirmed 
 - field `host_is_confirmed` must be true to be shown on map
-5. Status is not either "active" or "new"
+5. Status is not either "active" or "new" (or "staging" to only show on the test map)
 6. The event s private
 - field `is_private` must be false to be shown on map
 7. The postal code is either 20301 or 000840
