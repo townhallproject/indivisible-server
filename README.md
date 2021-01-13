@@ -31,4 +31,5 @@ server responsible for the interface between THP and Indivisible
 7. The postal code is either 20301 or 000840
 8. The address is 'This event is virtual, Washington, DC 20301'
 9. Is a virtual event:
-- the event has a custom field `is_virtual_event`. This was used for events that shouldn't show up on the map (pre COVID). This is different from `event_virtual_status===digital` which will show up on the map. 
+- the event has a custom field `is_virtual_event`. This was used for events that shouldn't show up on the map (pre COVID). This is different from `event_virtual_status===digital` which will show up on the map.
+10. It's not included in the campaigns we pull from: 9, 15, 21, 24, 27, 28, 38
