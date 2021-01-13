@@ -3,7 +3,7 @@ server responsible for the interface between THP and Indivisible
 
 ## Processes
 1. GET events from ActionKit API => firebase database 
-- staging backend pulls all event with `status === "new" | "active" | "staging"` and saves them in https://indivisible-testing-data.firebaseio.com
+- staging backend pulls all events with `status === "new" | "active" | "staging"` and saves them in https://indivisible-testing-data.firebaseio.com
 Note: `NODE_ENV`=production, but the env variables set in Heroku are for the testing database. 
 - production backend pulls events with `status === "new" | "active"` and saves them in https://indivisible-data.firebaseio.com
 
