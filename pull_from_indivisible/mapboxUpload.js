@@ -20,6 +20,7 @@ const uploadToMapbox = (url) => {
     });
 };
 
+// Upload the group data to Indivisible's S3
 const uploadToIndivisible = (geoJSON) => {
   console.log("Uploading to IN s3");
   var inS3 = new AWS.S3({
