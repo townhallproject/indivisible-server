@@ -27,7 +27,7 @@ const uploadToIndivisible = (geoJSON) => {
     accessKeyId: process.env.IN_S3_KEY_ID,
     secretAccessKey: process.env.IN_S3_SECRET_KEY
   });
-  s3.putObject({
+  inS3.putObject({
     Bucket: process.env.IN_S3_BUCKET,
     Key: process.env.IN_S3_KEY,
     Body: JSON.stringify(geoJSON)
