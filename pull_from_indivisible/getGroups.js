@@ -10,6 +10,10 @@ const Group = require('./group');
 const makeGeoJSON = require('./point');
 const uploadToS3 = require('./mapboxUpload');
 
+// (jason@indivisible.org) We don't have access to the environmental
+// variables, so we need a way to shut off the Mapbox upload in code
+const doS3upload = false;
+
 function requestData(url, pageNumber) {
   return superagent
     .post(url)
@@ -100,7 +104,7 @@ function getAllData(pageNumber){
       }
       else {
         console.log('got all groups', allGroups.length, count.notPublic);
-        if (!testing) {
+        if (!testing && doS3upload) {
           const geoJSON = makeGeoJSON(allGroups);
           uploadToS3(geoJSON);
         }
