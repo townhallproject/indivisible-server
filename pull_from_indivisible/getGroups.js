@@ -105,8 +105,11 @@ function getAllData(pageNumber){
       else {
         console.log('got all groups', allGroups.length, count.notPublic);
         if (!testing && doS3upload) {
+          console.log('Pushing group geo data to mapbox');
           const geoJSON = makeGeoJSON(allGroups);
           uploadToS3(geoJSON);
+        } else {
+          console.log('Skipping group geo data upload.');
         }
       }
     })
