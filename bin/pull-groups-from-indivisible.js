@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const getGroups = require('../pull_from_indivisible/getGroups');
 
-getGroups(1);
+# Uncomment if you want to use the THP group sync again.
+// getGroups(1);
 
 // firebasedb.ref('indivisible_groups').once('value').then(snapshot => {
 //   snapshot.forEach(res => {
