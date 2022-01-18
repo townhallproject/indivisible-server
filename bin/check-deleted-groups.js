@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+//Jason: When THP was managing the group database, this was running daily.
+//       In the process of migrating to the new system, I disabled this.
+//Heroku: npm run clear-groups (Daily at 8:00 AM UTC)
+
 const firebasedb = require('../lib/setup-indivisible-firebase');
 const getOneGroup = require('../pull_from_indivisible/get-one-group');
 const Group = require('../pull_from_indivisible/group');
