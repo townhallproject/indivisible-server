@@ -8,13 +8,22 @@ const staging = !!process.env.STAGING_DATABASE;
 
 const STATUSES_TO_INCLUDE = staging ? ['staging', 'active', 'new'] : ['active', 'new'];
 
+function combineGroupNames(obj) {
+  const group_names = Object.entries(obj).filter(([k, _]) =>
+    k.startsWith('group_name')
+  ).map(([_, v]) => v);
+  return group_names.join(", ");
+}
+
 class IndEvent {
   constructor(response) {
     for (var key in response) {
-      if (response.hasOwnProperty(key)) {
+      if (response.hasOwnProperty(key) && !key.startsWith('group_name')) {
         this[key] = response[key];
       }
     }
+    this['group_name'] = combineGroupNames(response);
+    
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
     this.townHallMeetingType = IndEvent.unPackField(response.fields, 'meeting_type');
     this.linkToInfo = IndEvent.unPackField(response.fields , 'link_to_event_information');
