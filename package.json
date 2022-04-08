@@ -37,7 +37,7 @@
     "firebase-admin": "^5.5.0",
     "lodash": "^4.17.20",
     "mailgun-js": "^0.22.0",
-    "moment": "^2.19.2",
+    "moment": "^2.29.2",
     "request": "^2.88.0",
     "superagent": "^3.8.1",
     "twilio": "^3.30.0"
