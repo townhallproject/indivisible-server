@@ -8,7 +8,7 @@ const getEvents = require('../pull_from_indivisible/getEvents');
 
 const urlTemplate = (campaign) => `/rest/v1/event/?campaign=${campaign}`;
 
-const campaigns = [15, 9, 21, 24, 27, 28, 38];
+const campaigns = [15, 9, 21, 24, 27, 28, 38, 19];
 const urls = campaigns.map((number) => urlTemplate(number));
 Promise.all(urls.map(url => getEvents(url) ))
   .then((returned) => {
