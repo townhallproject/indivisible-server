@@ -12,6 +12,7 @@ function requestData(url) {
 }
 
 function getAllData(path) {
+  console.log('Getting data from ' + path);
   return requestData(url + path)
     .then((response) => {
       response.body.objects.forEach((ele) => {
