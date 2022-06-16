@@ -15,6 +15,12 @@ class IndEvent {
         this[key] = response[key];
       }
     }
+
+    if (this['title'] === 'Text Training and Action Hour with Concord Indivisible') {
+        console.log("FOUND IT");
+        console.log(this);
+    }
+
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
     this.townHallMeetingType = IndEvent.unPackField(response.fields, 'meeting_type');
     this.linkToInfo = IndEvent.unPackField(response.fields , 'link_to_event_information');
