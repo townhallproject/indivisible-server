@@ -140,13 +140,15 @@ class IndEvent {
   }
 
   checkCampaignAndRemove() {
-    if (this.campaignNo === '19') {
-      console.log('ma campaign', this.id);
-      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-      console.log('campaign 19', this.id);
-      ref.set(null);
-      return ref.remove();
-    }
+    // Now that we're using Mobilize again, we don't want to remove Mobilize events.
+
+    // if (this.campaignNo === '19') {
+    //   console.log('ma campaign', this.id);
+    //   const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+    //   console.log('campaign 19', this.id);
+    //   ref.set(null);
+    //   return ref.remove();
+    // }
   }
 
   checkPostalAndRemove() {
