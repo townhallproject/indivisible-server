@@ -45,6 +45,7 @@ class IndEvent {
       this.issueFocus = false;
     }
 
+    // DEBUG
     if (this.id === 166555) {
         console.log("FOUND IT");
         console.log(this);
@@ -59,6 +60,11 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
+
+    // DEBUG: mobilize events are causing problems. Let's isolate to one.
+    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.id !== 166555) {
+        return;
+    }
 
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');
