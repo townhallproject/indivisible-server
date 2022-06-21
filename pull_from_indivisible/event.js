@@ -8,6 +8,8 @@ const staging = !!process.env.STAGING_DATABASE;
 
 const STATUSES_TO_INCLUDE = staging ? ['staging', 'active', 'new'] : ['active', 'new'];
 
+const MOBILIZE_CAMPAIGN_ID = 19;
+
 class IndEvent {
   constructor(response) {
     for (var key in response) {
@@ -26,7 +28,7 @@ class IndEvent {
     this.linkToInfo = IndEvent.unPackField(response.fields , 'link_to_event_information');
     this.displayAltLink = IndEvent.unPackField(response.fields, 'display_alt_link') ? true: false;
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
-    this.isVirtualEvent = IndEvent.unPackField(response.fields, 'is_virtual_event');
+    this.isVirtualEvent = IndEvent.unPackField(response.fields, 'is_virtual_event') === 'Yes';
     this.virtualStatus = IndEvent.unPackField(response.fields, 'event_virtual_status');
     this.eventType = IndEvent.unPackField(response.fields, 'event_type');
     this.eventScale = IndEvent.unPackField(response.fields, 'event_scale');
@@ -36,7 +38,7 @@ class IndEvent {
     this.isRecurring = IndEvent.unPackField(response.fields, 'is_recurring') === 'Yes';
     this.mobilizeId = IndEvent.unPackField(response.fields, 'mobilize_id');
     this.everyactionId = IndEvent.unPackField(response.fields, 'everyaction_eventid');
-    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital';
+    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital' || (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent);
     this.thpId = IndEvent.unPackField(response.fields, 'thp_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
@@ -84,7 +86,7 @@ class IndEvent {
       this.removeOne('virtual');
       return;
     }
-    if (this.isVirtualEvent === 'Yes') {
+    if (this.isVirtualEvent === 'Yes' && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
       this.removeOne('virtual');
       return;
     }
