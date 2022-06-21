@@ -83,11 +83,11 @@ class IndEvent {
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
-      this.removeOne('virtual');
+      this.removeOne('virtual addr');
       return;
     }
     if (this.isVirtualEvent && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
-      this.removeOne('virtual');
+      this.removeOne('is virtual event flagged');
       return;
     }
     let updates = {};
