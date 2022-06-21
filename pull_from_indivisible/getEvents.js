@@ -7,7 +7,7 @@ const staging = !!process.env.STAGING_DATABASE;
 
 function requestData(url) {
   return superagent
-    .get(fullUrl)
+    .get(url)
     .auth(process.env.ACTION_KIT_USERNAME, process.env.ACTION_KIT_PASS);
 }
 
