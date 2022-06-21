@@ -6,11 +6,6 @@ const IndEvent = require('./event');
 const staging = !!process.env.STAGING_DATABASE;
 
 function requestData(url) {
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  const dateString = twoDaysAgo.toISOString().substring(0, 10);
-  const fullUrl = url + "&starts_at__gt=" + dateString;
-  console.log("Requesting data from " + fullUrl);
   return superagent
     .get(fullUrl)
     .auth(process.env.ACTION_KIT_USERNAME, process.env.ACTION_KIT_PASS);

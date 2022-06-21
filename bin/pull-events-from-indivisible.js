@@ -6,7 +6,13 @@ const errorReport = require('../lib/error-reporting');
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
-const urlTemplate = (campaign) => `/rest/v1/event/?campaign=${campaign}`;
+const urlTemplate = (campaign) => {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    const dateString = twoDaysAgo.toISOString().substring(0, 10);
+  
+    return `/rest/v1/event/?campaign=${campaign}&starts_at__gt=${dateString}`;
+};
 
 const campaigns = [15, 9, 21, 24, 27, 28, 38, 19];
 const urls = campaigns.map((number) => urlTemplate(number));
