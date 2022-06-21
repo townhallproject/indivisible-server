@@ -8,7 +8,7 @@ const staging = !!process.env.STAGING_DATABASE;
 
 const STATUSES_TO_INCLUDE = staging ? ['staging', 'active', 'new'] : ['active', 'new'];
 
-const MOBILIZE_CAMPAIGN_ID = 19;
+const MOBILIZE_CAMPAIGN_ID = '19';
 
 class IndEvent {
   constructor(response) {
