@@ -108,9 +108,11 @@ class IndEvent {
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
-        console.log('removing', this.id, reason);
+        console.log('removing: ', this.id, reason);
         ref.set(null);
         return ref.remove();
+      } else {
+        console.log('skipping: ', this.id, reason);
       }
     });
   }
@@ -118,6 +120,7 @@ class IndEvent {
   checkDateAndRemove() {
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('event is before current date', this.id);
       ref.set(null);
       return ref.remove();
     }
