@@ -86,7 +86,7 @@ class IndEvent {
       this.removeOne('virtual');
       return;
     }
-    if (this.isVirtualEvent === 'Yes' && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
+    if (this.isVirtualEvent && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
       this.removeOne('virtual');
       return;
     }
