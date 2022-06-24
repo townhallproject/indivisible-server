@@ -33,7 +33,7 @@ class IndEvent {
     this.isRecurring = IndEvent.unPackField(response.fields, 'is_recurring') === 'Yes';
     this.mobilizeId = IndEvent.unPackField(response.fields, 'mobilize_id');
     this.everyactionId = IndEvent.unPackField(response.fields, 'everyaction_eventid');
-    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital' || (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent);
+    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital';
     this.thpId = IndEvent.unPackField(response.fields, 'thp_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
