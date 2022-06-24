@@ -46,7 +46,7 @@ class IndEvent {
     }
 
     // DEBUG
-    if (this.id === 166555) {
+    if (this.id === 166625 || this.id === 166481) {
         console.log("FOUND IT");
         console.log(this);
     }
@@ -61,8 +61,8 @@ class IndEvent {
 
   writeToFirebase(mockref) {
 
-    // DEBUG: mobilize events are causing problems. Let's isolate to one.
-    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.id !== 166555) {
+    // DEBUG: mobilize events are causing problems. Let's not uploda them for now.
+    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID) {
         return;
     }
 
