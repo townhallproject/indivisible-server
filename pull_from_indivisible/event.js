@@ -44,12 +44,6 @@ class IndEvent {
     } else {
       this.issueFocus = false;
     }
-
-    // DEBUG
-    if (this.id === 166625 || this.id === 166481) {
-        console.log("FOUND IT");
-        console.log(this);
-    }
   }
 
   static unPackField(fields, fieldName) {
