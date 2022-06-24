@@ -25,9 +25,6 @@ class IndEvent {
     this.campaignNo = this.campaign ? this.campaign.split('/').splice(-2, 1)[0]: null;
     this.isVirtualEvent = IndEvent.unPackField(response.fields, 'is_virtual_event') === 'Yes';
     this.virtualStatus = IndEvent.unPackField(response.fields, 'event_virtual_status');
-    if (this.isVirtualEvent) {
-        this.virtualStatus = "Digital";
-    }
     this.eventType = IndEvent.unPackField(response.fields, 'event_type');
     this.eventScale = IndEvent.unPackField(response.fields, 'event_scale');
     this.actionMeetingType = IndEvent.unPackField(response.fields, 'meeting_type');
