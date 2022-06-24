@@ -10,7 +10,7 @@ const urlTemplate = (campaign) => {
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     const dateString = twoDaysAgo.toISOString().substring(0, 10);
-  
+
     return `/rest/v1/event/?campaign=${campaign}&starts_at__gt=${dateString}`;
 };
 
