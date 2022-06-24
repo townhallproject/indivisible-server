@@ -44,6 +44,11 @@ class IndEvent {
     } else {
       this.issueFocus = false;
     }
+
+    if(this.id === 166481) {
+        console.log("Here it is");
+        console.log(this);
+    }
   }
 
   static unPackField(fields, fieldName) {
