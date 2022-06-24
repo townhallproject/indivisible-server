@@ -83,6 +83,9 @@ class IndEvent {
     this.us_state_senate = "";
     this.venue = "This event is virtual";
     this.zip = "";
+
+    // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
+    this.everyactionId = "1";
   }
 
   writeToFirebase(mockref) {
