@@ -57,6 +57,7 @@ class IndEvent {
 
     // DEBUG: mobilize events are causing problems. Let's only upload our test event for now.
     if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.id !== 166481) {
+        console.log("DEBUG Skipping mobilize evente with id ", this.id);
         return;
     }
 
