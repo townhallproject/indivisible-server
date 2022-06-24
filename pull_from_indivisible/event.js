@@ -8,7 +8,7 @@ const staging = !!process.env.STAGING_DATABASE;
 
 const STATUSES_TO_INCLUDE = staging ? ['staging', 'active', 'new'] : ['active', 'new'];
 
-const MOBILIZE_CAMPAIGN_ID = 19;
+const MOBILIZE_CAMPAIGN_ID = '19';
 
 class IndEvent {
   constructor(response) {
@@ -16,11 +16,6 @@ class IndEvent {
       if (response.hasOwnProperty(key)) {
         this[key] = response[key];
       }
-    }
-
-    if (this['title'] === 'Sample Door-to-Door Canvass') {
-        console.log("FOUND IT");
-        console.log(this);
     }
 
     const issueFocus = response.fields? response.fields.filter(obj => obj.name === 'event_issue_focus'): null;
@@ -38,7 +33,7 @@ class IndEvent {
     this.isRecurring = IndEvent.unPackField(response.fields, 'is_recurring') === 'Yes';
     this.mobilizeId = IndEvent.unPackField(response.fields, 'mobilize_id');
     this.everyactionId = IndEvent.unPackField(response.fields, 'everyaction_eventid');
-    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital' || (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent);
+    this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital';
     this.thpId = IndEvent.unPackField(response.fields, 'thp_id');
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
@@ -49,6 +44,12 @@ class IndEvent {
     } else {
       this.issueFocus = false;
     }
+
+    // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
+    // obviously not built to handle that, so we need to remove it.
+    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent) {
+        this.clearMobilizeVirtualAddress();
+    }
   }
 
   static unPackField(fields, fieldName) {
@@ -58,8 +59,29 @@ class IndEvent {
     return result.length > 0 ? result[0].value : null;
   }
 
-  writeToFirebase(mockref) {
+  // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
+  // obviously not built to handle that, so we need to remove it.
+  clearMobilizeVirtualAddress() {
+    this.address1 = "Virtual";
+    this.address2 = "";
+    this.city = "";
+    this.country = "United States";
+    this.postal = "";
+    this.state = "";
+    this.zip = "";
+    this.us_county = "";
+    this.us_district = "";
+    this.us_state_district = "";
+    this.us_state_senate = "";
+    this.venue = "This event is virtual";
+    this.zip = "";
 
+    // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
+    this.everyactionId = "1";
+  }
+
+  writeToFirebase(mockref) {
+    
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');
       return;
@@ -83,11 +105,11 @@ class IndEvent {
       return;
     }
     if (this.address1 === 'This event is virtual, Washington, DC 20301'){
-      this.removeOne('virtual');
+      this.removeOne('virtual addr');
       return;
     }
     if (this.isVirtualEvent && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
-      this.removeOne('virtual');
+      this.removeOne('is virtual event flagged');
       return;
     }
     let updates = {};
@@ -108,9 +130,11 @@ class IndEvent {
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
-        console.log('removing', this.id, reason);
+        console.log('removing: ', this.id, reason);
         ref.set(null);
         return ref.remove();
+      } else {
+        console.log('skipping: ', this.id, reason);
       }
     });
   }
@@ -118,6 +142,7 @@ class IndEvent {
   checkDateAndRemove() {
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      console.log('event is before current date', this.id);
       ref.set(null);
       return ref.remove();
     }
@@ -139,18 +164,6 @@ class IndEvent {
       ref.set(null);
       return ref.remove();
     }
-  }
-
-  checkCampaignAndRemove() {
-    // Now that we're using Mobilize again, we don't want to remove Mobilize events.
-
-    // if (this.campaignNo === '19') {
-    //   console.log('ma campaign', this.id);
-    //   const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-    //   console.log('campaign 19', this.id);
-    //   ref.set(null);
-    //   return ref.remove();
-    // }
   }
 
   checkPostalAndRemove() {

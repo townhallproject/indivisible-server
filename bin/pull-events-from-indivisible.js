@@ -32,6 +32,5 @@ firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
   indEvent.checkDateAndRemove();
   indEvent.checkStatusAndRemove();
   indEvent.checkPublicAndRemove();
-  indEvent.checkCampaignAndRemove();
 });
 
