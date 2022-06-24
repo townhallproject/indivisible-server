@@ -50,11 +50,6 @@ class IndEvent {
     if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent) {
         this.clearMobilizeVirtualAddress();
     }
-
-    if(this.id === 166481) {
-        console.log("Here it is");
-        console.log(this);
-    }
   }
 
   static unPackField(fields, fieldName) {
@@ -169,18 +164,6 @@ class IndEvent {
       ref.set(null);
       return ref.remove();
     }
-  }
-
-  checkCampaignAndRemove() {
-    // Now that we're using Mobilize again, we don't want to remove Mobilize events.
-
-    // if (this.campaignNo === '19') {
-    //   console.log('ma campaign', this.id);
-    //   const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
-    //   console.log('campaign 19', this.id);
-    //   ref.set(null);
-    //   return ref.remove();
-    // }
   }
 
   checkPostalAndRemove() {
