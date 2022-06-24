@@ -45,6 +45,12 @@ class IndEvent {
       this.issueFocus = false;
     }
 
+    // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
+    // obviously not built to handle that, so we need to remove it.
+    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent) {
+        this.clearMobilizeVirtualAddress();
+    }
+
     if(this.id === 166481) {
         console.log("Here it is");
         console.log(this);
@@ -56,6 +62,24 @@ class IndEvent {
       name: fieldName,
     });
     return result.length > 0 ? result[0].value : null;
+  }
+
+  // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
+  // obviously not built to handle that, so we need to remove it.
+  clearMobilizeVirtualAddress() {
+    this.address1 = "Virtual";
+    this.address2 = "";
+    this.city = "";
+    this.country = "United States";
+    this.postal = "";
+    this.state = "";
+    this.zip = "";
+    this.us_county = "";
+    this.us_district = "";
+    this.us_state_district = "";
+    this.us_state_senate = "";
+    this.venue = "This event is virtual";
+    this.zip = "";
   }
 
   writeToFirebase(mockref) {
