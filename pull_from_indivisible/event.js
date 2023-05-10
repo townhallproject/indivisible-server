@@ -61,6 +61,7 @@ class IndEvent {
 
   // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
   // obviously not built to handle that, so we need to remove it.
+  // But we don't want to clear the zip because we manually fix those!
   clearMobilizeVirtualAddress() {
     this.address1 = "Virtual";
     this.address2 = "";
@@ -68,13 +69,13 @@ class IndEvent {
     this.country = "United States";
     this.postal = "";
     this.state = "";
-    this.zip = "";
+    // this.zip = "";
     this.us_county = "";
     this.us_district = "";
     this.us_state_district = "";
     this.us_state_senate = "";
     this.venue = "This event is virtual";
-    this.zip = "";
+    // this.zip = "";
 
     // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
     this.everyactionId = "1";
