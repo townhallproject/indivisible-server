@@ -17,6 +17,7 @@ function getAllData(path) {
     .then((response) => {
       response.body.objects.forEach((ele) => {
         let newEvent = new IndEvent(ele);
+        console.log('Processing event ', newEvent.id);
         if (!newEvent.issueFocus) {
           if (staging) {
             console.log('No issue focus', newEvent.id);
