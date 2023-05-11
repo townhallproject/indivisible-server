@@ -63,6 +63,7 @@ class IndEvent {
   // obviously not built to handle that, so we need to remove it.
   // But we don't want to clear the zip because we manually fix those!
   clearMobilizeVirtualAddress() {
+    console.log("Clearing Mobilize event");
     this.address1 = "Virtual";
     this.address2 = "";
     this.city = "";
@@ -75,6 +76,7 @@ class IndEvent {
     this.us_state_district = "";
     this.us_state_senate = "";
     this.venue = "This event is virtual";
+    this.region = "";
     // this.zip = "";
 
     // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
@@ -128,6 +130,7 @@ class IndEvent {
   }
 
   removeOne(reason){
+    console.log("Processing remove: ", this.id, reason);
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
