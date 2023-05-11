@@ -1,9 +1,10 @@
 const IndTownHall = require('./townhall-model');
 const firebasedb = require('../lib/setup-firebase');
 const inddivisibleFb = require('../lib/setup-indivisible-firebase');
+const firebaseKey = require('../lib/firebase-key').firebaseKey;
 
 
-inddivisibleFb.ref('indivisible_public_events').once('value')
+inddivisibleFb.ref(firebaseKey).once('value')
   .then((snapshot) => {
     snapshot.forEach((el) => {
       const event = el.val();

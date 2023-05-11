@@ -2,6 +2,7 @@ const moment = require('moment');
 const lodash = require('lodash');
 
 const firebasedb = require('../lib/setup-indivisible-firebase');
+const firebaseKey = require('../lib/firebase-key').firebaseKey;
 const errorReport = require('../lib/error-reporting');
 
 const staging = !!process.env.STAGING_DATABASE;
@@ -115,7 +116,7 @@ class IndEvent {
     }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
-    let path = `indivisible_public_events/`;
+    let path = `${firebaseKey}/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
 
@@ -128,7 +129,7 @@ class IndEvent {
   }
 
   removeOne(reason){
-    const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+    const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
         console.log('removing: ', this.id, reason);
@@ -142,7 +143,7 @@ class IndEvent {
 
   checkDateAndRemove() {
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
-      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('event is before current date', this.id);
       ref.set(null);
       return ref.remove();
@@ -151,7 +152,7 @@ class IndEvent {
 
   checkStatusAndRemove() {
     if (!STATUSES_TO_INCLUDE.includes(this.status)) {
-      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('not the right status', this.id);
       ref.set(null);
       return ref.remove();
@@ -160,7 +161,7 @@ class IndEvent {
 
   checkPublicAndRemove() {
     if (this.is_private) {
-      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('not public', this.id);
       ref.set(null);
       return ref.remove();
@@ -169,7 +170,7 @@ class IndEvent {
 
   checkPostalAndRemove() {
     if (this.postal === '20301' || this.postal === '00840') {
-      const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
+      const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('wrong postal code', this.id);
       ref.set(null);
       return ref.remove();
