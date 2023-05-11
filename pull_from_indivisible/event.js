@@ -118,6 +118,8 @@ class IndEvent {
       this.removeOne('is virtual event flagged');
       return;
     }
+    // If we have a virtual Mobilize event that we weren't able to find a zip for,
+    // then remove it so it doesn't show up in Chile...
     if (this.isVirtualMobilizeEvent() && this.zip === "") {
         this.removeOne('virtual event without zip code');
     }
