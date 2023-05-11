@@ -6,6 +6,8 @@ const errorReport = require('../lib/error-reporting');
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
+const firebaseKey = require('../lib/firebase-key/firebaseKey');
+
 const urlTemplate = (campaign) => {
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
@@ -27,7 +29,7 @@ Promise.all(urls.map(url => getEvents(url) ))
     return newerrorEmail.sendEmail();
   });
 
-firebasedb.ref('indivisible_public_events/').on('child_added', (snapshot) => {
+firebasedb.ref(`${firebaseKey}/`).on('child_added', (snapshot) => {
   var indEvent = new eventModel( snapshot.val());
   indEvent.checkDateAndRemove();
   indEvent.checkStatusAndRemove();
