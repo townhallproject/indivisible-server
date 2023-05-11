@@ -2,7 +2,7 @@ const moment = require('moment');
 const lodash = require('lodash');
 
 const firebasedb = require('../lib/setup-indivisible-firebase');
-const firebaseKey = require('../lib/firebase-key/firebaseKey');
+const firebaseKey = require('../lib/firebase-key').firebaseKey;
 const errorReport = require('../lib/error-reporting');
 
 const staging = !!process.env.STAGING_DATABASE;

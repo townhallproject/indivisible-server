@@ -6,7 +6,7 @@ const errorReport = require('../lib/error-reporting');
 const eventModel = require('../pull_from_indivisible/event');
 const getEvents = require('../pull_from_indivisible/getEvents');
 
-const firebaseKey = require('../lib/firebase-key/firebaseKey');
+const firebaseKey = require('../lib/firebase-key').firebaseKey;
 
 const urlTemplate = (campaign) => {
     const twoDaysAgo = new Date();

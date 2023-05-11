@@ -1,7 +1,7 @@
 const IndTownHall = require('./townhall-model');
 const firebasedb = require('../lib/setup-firebase');
 const inddivisibleFb = require('../lib/setup-indivisible-firebase');
-const firebaseKey = require('../lib/firebase-key/firebaseKey');
+const firebaseKey = require('../lib/firebase-key').firebaseKey;
 
 
 inddivisibleFb.ref(firebaseKey).once('value')
