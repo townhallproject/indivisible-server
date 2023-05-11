@@ -48,7 +48,7 @@ class IndEvent {
 
     // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
     // obviously not built to handle that, so we need to remove it.
-    if (this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent) {
+    if (this.isVirtualMobilizeEvent()) {
         this.clearMobilizeVirtualAddress();
     }
   }
@@ -58,6 +58,10 @@ class IndEvent {
       name: fieldName,
     });
     return result.length > 0 ? result[0].value : null;
+  }
+
+  isVirtualMobilizeEvent() {
+    return this.campaignNo === MOBILIZE_CAMPAIGN_ID && this.isVirtualEvent;
   }
 
   // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
@@ -113,6 +117,9 @@ class IndEvent {
     if (this.isVirtualEvent && this.campaignNo !== MOBILIZE_CAMPAIGN_ID) {
       this.removeOne('is virtual event flagged');
       return;
+    }
+    if (this.isVirtualMobilizeEvent() && this.zip === "") {
+        this.removeOne('virtual event without zip code');
     }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
