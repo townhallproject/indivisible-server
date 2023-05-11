@@ -63,7 +63,7 @@ class IndEvent {
   // obviously not built to handle that, so we need to remove it.
   // But we don't want to clear the zip because we manually fix those!
   clearMobilizeVirtualAddress() {
-    console.log("Clearing Mobilize event");
+    console.log("Clearing Mobilize event - ", this.id);
     this.address1 = "Virtual";
     this.address2 = "";
     this.city = "";
@@ -120,6 +120,8 @@ class IndEvent {
     let path = `indivisible_public_events/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
+
+    console.log("Updates for ", this.id, ": ", updates);
 
     return firebaseref.update(updates)
       .catch((err) => {
