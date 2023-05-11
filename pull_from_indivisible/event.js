@@ -70,14 +70,12 @@ class IndEvent {
     this.country = "United States";
     this.postal = "";
     this.state = "";
-    // this.zip = "";
     this.us_county = "";
     this.us_district = "";
     this.us_state_district = "";
     this.us_state_senate = "";
     this.venue = "This event is virtual";
     this.region = "";
-    // this.zip = "";
 
     // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
     this.everyactionId = "1";
@@ -121,8 +119,6 @@ class IndEvent {
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
 
-    console.log("Updates for ", this.id, ": ", updates);
-
     return firebaseref.update(updates)
       .catch((err) => {
         console.log('cant write event');
@@ -132,7 +128,6 @@ class IndEvent {
   }
 
   removeOne(reason){
-    console.log("Processing remove: ", this.id, reason);
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
