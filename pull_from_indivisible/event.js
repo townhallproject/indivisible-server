@@ -61,20 +61,23 @@ class IndEvent {
 
   // Mobilize puts all virtual events in Puerto Natales, Chile. The website is 
   // obviously not built to handle that, so we need to remove it.
+  // But we don't want to clear the zip because we manually fix those!
   clearMobilizeVirtualAddress() {
+    console.log("Clearing Mobilize event - ", this.id);
     this.address1 = "Virtual";
     this.address2 = "";
     this.city = "";
     this.country = "United States";
     this.postal = "";
     this.state = "";
-    this.zip = "";
+    // this.zip = "";
     this.us_county = "";
     this.us_district = "";
     this.us_state_district = "";
     this.us_state_senate = "";
     this.venue = "This event is virtual";
-    this.zip = "";
+    this.region = "";
+    // this.zip = "";
 
     // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
     this.everyactionId = "1";
@@ -118,6 +121,8 @@ class IndEvent {
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
 
+    console.log("Updates for ", this.id, ": ", updates);
+
     return firebaseref.update(updates)
       .catch((err) => {
         console.log('cant write event');
@@ -127,6 +132,7 @@ class IndEvent {
   }
 
   removeOne(reason){
+    console.log("Processing remove: ", this.id, reason);
     const ref = firebasedb.ref(`indivisible_public_events/${this.id}`);
     return ref.once('value', (snapshot) => {
       if (snapshot.exists()) {
