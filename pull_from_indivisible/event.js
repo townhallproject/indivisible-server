@@ -122,6 +122,7 @@ class IndEvent {
     // then remove it so it doesn't show up in Chile...
     if (this.isVirtualMobilizeEvent() && this.zip === "") {
         this.removeOne('virtual event without zip code');
+        return;
     }
     let updates = {};
     let firebaseref = mockref || firebasedb.ref();
