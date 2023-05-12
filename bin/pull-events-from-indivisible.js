@@ -29,11 +29,11 @@ Promise.all(urls.map(url => getEvents(url) ))
     return newerrorEmail.sendEmail();
   });
 
-firebasedb.ref(`${firebaseKey}/`).on('child_added', (snapshot) => {
-  var indEvent = new eventModel( snapshot.val());
-  console.log("Event added ", indEvent.id);
-  indEvent.checkDateAndRemove();
-  indEvent.checkStatusAndRemove();
-  indEvent.checkPublicAndRemove();
-});
+// firebasedb.ref(`${firebaseKey}/`).on('child_added', (snapshot) => {
+//   var indEvent = new eventModel( snapshot.val());
+//   console.log("Event added ", indEvent.id);
+//   indEvent.checkDateAndRemove();
+//   indEvent.checkStatusAndRemove();
+//   indEvent.checkPublicAndRemove();
+// });
 
