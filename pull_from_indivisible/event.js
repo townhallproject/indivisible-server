@@ -51,15 +51,6 @@ class IndEvent {
     if (this.isVirtualMobilizeEvent()) {
         this.clearMobilizeVirtualAddress();
     }
-
-    if (this.id === 168904) {
-        console.log("Initializing debug event");
-        const data = {
-            ...this
-        };
-        data.fields = [];
-        console.log(data);
-    }
   }
 
   static unPackField(fields, fieldName) {
@@ -96,10 +87,6 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
-
-    if (this.id === 168904) {
-        console.log("Found debug event writing to Firebase");
-    }
     
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');

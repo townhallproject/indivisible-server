@@ -18,10 +18,6 @@ function getAllData(path) {
       response.body.objects.forEach((ele) => {
         let newEvent = new IndEvent(ele);
 
-        if (newEvent.id === 168904) {
-            console.log("Iterating through, found debug event");
-        }
-
         if (!newEvent.issueFocus) {
             console.log('No issue focus, skipping:', newEvent.id);
             return;
@@ -32,21 +28,15 @@ function getAllData(path) {
           }
         }
 
-        if (newEvent.creator !== '/rest/v1/user/393393/') {
-            if (newEvent.id === 168904) {
-                console.log("Requesting group name for debug event");
-            }
-    
+        if (newEvent.creator !== '/rest/v1/user/393393/') {   
           //get group name
           requestData(url + newEvent.creator)
             .then(response => {
-                if (newEvent.id === 168904) {
-                    console.log("Got requestData from debug event creator");
+                console.log("Got requestData from event", newEvent.id);
+                if (response.body.fields && response.body.fields.group_name) {
+                    newEvent.group_name = response.body.fields.group_name;
                 }
-              if (response.body.fields && response.body.fields.group_name) {
-                newEvent.group_name = response.body.fields.group_name;
-              }
-              return newEvent.writeToFirebase();
+                return newEvent.writeToFirebase();
             })
             .catch(() => {
               console.log('request group name error', url, newEvent.creator, newEvent.id);
