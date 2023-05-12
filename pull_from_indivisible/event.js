@@ -174,6 +174,7 @@ class IndEvent {
   }
 
   checkDateAndRemove() {
+    console.log("Checking date");
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('event is before current date', this.id);
@@ -183,6 +184,7 @@ class IndEvent {
   }
 
   checkStatusAndRemove() {
+    console.log("Checking status");
     if (!STATUSES_TO_INCLUDE.includes(this.status)) {
       const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('not the right status', this.id);
@@ -192,6 +194,7 @@ class IndEvent {
   }
 
   checkPublicAndRemove() {
+    console.log("Checking public");
     if (this.is_private) {
       const ref = firebasedb.ref(`${firebaseKey}/${this.id}`);
       console.log('not public', this.id);
