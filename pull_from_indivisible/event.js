@@ -143,7 +143,7 @@ class IndEvent {
     updates[path + newPostKey] = this;
 
     if (newEvent.id === 168974) {
-        console.log("Debug event updates", updates");
+        console.log("Debug event updates", updates);
     }
 
     return firebaseref.update(updates)
