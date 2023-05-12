@@ -95,6 +95,10 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
+
+    if (this.id === 168974) {
+        console.log("Writing debug event");
+    }
     
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');
@@ -137,6 +141,10 @@ class IndEvent {
     let path = `${firebaseKey}/`;
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
+
+    if (newEvent.id === 168974) {
+        console.log("Debug event updates", updates");
+    }
 
     return firebaseref.update(updates)
       .catch((err) => {
