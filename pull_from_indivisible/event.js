@@ -142,7 +142,7 @@ class IndEvent {
     let newPostKey = this.id;
     updates[path + newPostKey] = this;
 
-    if (newEvent.id === 168974) {
+    if (this.id === 168974) {
         console.log("Debug event updates", updates);
     }
 
