@@ -87,6 +87,11 @@ class IndEvent {
   }
 
   writeToFirebase(mockref) {
+
+    if (this.id === 168904) {
+        console.log("Found debug event");
+        console.log(this);
+    }
     
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {
       this.removeOne('is in past');
