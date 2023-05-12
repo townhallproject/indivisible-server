@@ -40,6 +40,7 @@ function getAllData(path) {
           //get group name
           requestData(url + newEvent.creator)
             .then(response => {
+                console.log("Getting group name", newEvent.id);
                 if (newEvent.id === 168904) {
                     console.log("Got requestData from debug event creator");
                 }
