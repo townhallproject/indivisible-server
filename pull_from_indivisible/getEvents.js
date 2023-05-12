@@ -28,7 +28,8 @@ function getAllData(path) {
           }
         }
 
-        if (newEvent.creator !== '/rest/v1/user/393393/') {   
+        const hasGroupName = newEvent.hasOwnProperty('group_name') && newEvent['group_name'];
+        if (newEvent.creator !== '/rest/v1/user/393393/' && !hasGroupName) {   
           //get group name
           requestData(url + newEvent.creator)
             .then(response => {
