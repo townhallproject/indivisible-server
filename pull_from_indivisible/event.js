@@ -36,6 +36,7 @@ class IndEvent {
     this.everyactionId = IndEvent.unPackField(response.fields, 'everyaction_eventid');
     this.isDigital = IndEvent.unPackField(response.fields, 'event_virtual_status') === 'digital';
     this.thpId = IndEvent.unPackField(response.fields, 'thp_id');
+    this.fields = response.fields;
     //Do not show venue if venue = “Unnamed venue” or if venue = "Private venue"
     this.venue = this.venue === 'Unnamed venue' || this.venue === '"Private venue' ? null: this.venue;
     if (issueFocus && issueFocus.length > 0) {
@@ -89,6 +90,8 @@ class IndEvent {
 
     // To link the linkToEventInfo on the RSVP button, an everyactionId must be present.
     this.everyactionId = "1";
+
+    this.group_name = IndEvent.unPackField(this.fields, 'mobilize_group_name');
   }
 
   writeToFirebase(mockref) {
