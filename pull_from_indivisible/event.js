@@ -146,7 +146,13 @@ class IndEvent {
         console.log("Debug event updates", updates);
     }
 
-    return firebaseref.update(updates)
+    return firebaseref.update(updates, (error) => {
+        if (error) {
+            console.log('Data could not be saved.' + error);
+          } else {
+            console.log('Data saved successfully.');
+          }
+      })
       .catch((err) => {
         console.log('cant write event');
         let newErrorEmail = new errorReport(err, `Issue with pulling from indivisible: ${JSON.stringify(this)}`);
