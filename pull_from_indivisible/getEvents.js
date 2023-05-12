@@ -29,7 +29,15 @@ function getAllData(path) {
         }
 
         const hasGroupName = newEvent.hasOwnProperty('group_name') && newEvent['group_name'];
+        if (newEvent.id === 168974) {
+            console.log("About to write debug event");
+            console.log("Has group name", hasGroupName);
+        }
         if (newEvent.creator !== '/rest/v1/user/393393/' && !hasGroupName) {   
+            if (newEvent.id === 168974) {
+                console.log("Getting name for debug event");
+            }
+
           //get group name
           requestData(url + newEvent.creator)
             .then(response => {
@@ -44,6 +52,9 @@ function getAllData(path) {
               return newEvent.writeToFirebase();
             });
         } else {
+            if (newEvent.id === 168974) {
+                console.log("Skipping straight to write for debug event");
+            }
           newEvent.writeToFirebase();
         }
       });
