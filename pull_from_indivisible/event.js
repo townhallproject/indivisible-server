@@ -51,6 +51,11 @@ class IndEvent {
     if (this.isVirtualMobilizeEvent()) {
         this.clearMobilizeVirtualAddress();
     }
+
+    if (this.id === 168974) {
+        console.log("Found debug event");
+        console.log(this);
+    }
   }
 
   static unPackField(fields, fieldName) {

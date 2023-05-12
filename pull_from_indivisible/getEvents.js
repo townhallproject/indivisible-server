@@ -40,8 +40,7 @@ function getAllData(path) {
             })
             .catch(() => {
               console.log('request group name error', url, newEvent.creator, newEvent.id);
-              return newEvent.writeToFirebase();  
-              
+              return newEvent.writeToFirebase();
             });
         } else {
           newEvent.writeToFirebase();
