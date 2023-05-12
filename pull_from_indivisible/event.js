@@ -54,7 +54,11 @@ class IndEvent {
 
     if (this.id === 168904) {
         console.log("Initializing debug event");
-        console.log(this);
+        const data = {
+            ...this
+        };
+        data.fields = [];
+        console.log(data);
     }
   }
 
@@ -95,7 +99,6 @@ class IndEvent {
 
     if (this.id === 168904) {
         console.log("Found debug event writing to Firebase");
-        console.log(this);
     }
     
     if (moment(this.starts_at_utc).isBefore(moment(), 'day')) {

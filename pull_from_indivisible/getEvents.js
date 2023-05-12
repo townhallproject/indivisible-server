@@ -17,11 +17,14 @@ function getAllData(path) {
     .then((response) => {
       response.body.objects.forEach((ele) => {
         let newEvent = new IndEvent(ele);
+
+        if (newEvent.id == 168904) {
+            console.log("Iterating through, found debug event");
+        }
+
         if (!newEvent.issueFocus) {
-          if (staging) {
-            console.log('No issue focus', newEvent.id);
-          }
-          return;
+            console.log('No issue focus, skipping:', newEvent.id);
+            return;
         }
         if (newEvent.isRecurring) {
           if (moment(newEvent.starts_at).isAfter(moment().add(3, 'month'))) {
